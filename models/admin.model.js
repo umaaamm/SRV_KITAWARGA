@@ -1,0 +1,24 @@
+module.exports = (sequelize, Sequelize) => {
+  const Admin = sequelize.define("tb_admin", {
+    username_admin: {
+      type: Sequelize.STRING
+    },
+    nama_admin: {
+      type: Sequelize.STRING
+    },
+    email_admin: {
+      type: Sequelize.STRING
+    },
+    password_admin: {
+      type: Sequelize.STRING
+    },
+    no_hp_admin: {
+      type: Sequelize.STRING
+    },
+    role: {
+      type: Sequelize.STRING
+    }
+  });
+
+  return Admin;
+};
