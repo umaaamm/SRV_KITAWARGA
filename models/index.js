@@ -26,18 +26,11 @@ db.sequelize = sequelize;
 
 db.admin = require("../models/admin.model.js")(sequelize, Sequelize);
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
-
-// db.role.belongsToMany(db.admin, {
-//   through: "user_roles",
-//   foreignKey: "roleId",
-//   otherKey: "userId"
-// });
-// db.user.belongsToMany(db.role, {
-//   through: "user_roles",
-//   foreignKey: "userId",
-//   otherKey: "roleId"
-// });
-
-// db.ROLES = ["user", "admin", "moderator"];
+db.pemasukan = require("../models/pemasukan.model.js")(sequelize, Sequelize);
+db.pengeluaran = require("../models/pengeluaran.model.js")(sequelize, Sequelize);
+db.kasbon = require("../models/kasbon.model.js")(sequelize, Sequelize);
+db.kategori = require("../models/kategori.model.js")(sequelize, Sequelize);
+db.manajemenKaryawan = require("../models/manajemenKaryawan.model.js")(sequelize, Sequelize);
+db.daftarWarga = require("../models/daftarWarga.model.js")(sequelize, Sequelize);
 
 module.exports = db;

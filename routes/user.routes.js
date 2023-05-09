@@ -1,5 +1,6 @@
 const { authJwt } = require("../middleware");
 const controller = require("../controllers/admin.controller");
+const controllerRole = require("../controllers/role.controller");
 
 module.exports = function(app) {
   app.use(function(req, res, next) {
@@ -29,4 +30,11 @@ module.exports = function(app) {
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.adminBoard
   );
+
+  app.post(
+    "/api/insert/role",
+    [authJwt.verifyToken],
+    controllerRole.addRole
+  )
+
 };
