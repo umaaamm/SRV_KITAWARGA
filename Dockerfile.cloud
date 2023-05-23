@@ -8,11 +8,12 @@ WORKDIR /src
 # where available (npm@5+)
 COPY package*.json ./
 
-RUN npm install -g nodemon && npm install
+RUN npm install
 # If you are building your code for production
 # RUN npm ci --omit=dev
 
 # Bundle app source
+COPY . .
+
 EXPOSE 3000
-COPY . /
-CMD ["nodemon", "server.js"]
+CMD [ "node", "server.js" ]
