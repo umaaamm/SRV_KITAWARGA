@@ -1,6 +1,11 @@
 const { authJwt } = require("../middleware");
 const controllerRole = require("../controllers/role.controller");
 const controllerKategori = require("../controllers/kategori.controller");
+const controllerPengeluaran = require("../controllers/pengeluaran.controller");
+const controllerKaryawan = require("../controllers/karyawan.controller");
+const controllerWarga = require("../controllers/warga.controller");
+const controllerKasbon = require("../controllers/kasbon.controller");
+
 const middleware = require("../middleware");
 
 module.exports = function (app) {
@@ -51,7 +56,97 @@ module.exports = function (app) {
         [authJwt.verifyToken, middleware.verifyAdd.checkDataKategori],
         controllerKategori.updateKategori
     )
-
     // end kategori
+
+    // Pengeluaran
+    app.post(
+        "/api/admin/insert/pengeluaran",
+        [authJwt.verifyToken, middleware.verifyAdd.verifyPengeluaran],
+        controllerPengeluaran.addPengeluaran
+    )
+
+    app.post(
+        "/api/admin/delete/pengeluaran",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataPengeluaran],
+        controllerPengeluaran.deletePengeluaran
+    )
+
+    app.post(
+        "/api/admin/update/pengeluaran",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataPengeluaran],
+        controllerPengeluaran.updatePengeluaran
+    )
+
+    // end Pengeluaran
+
+    // karyawan
+    app.post(
+        "/api/admin/insert/karyawan",
+        [authJwt.verifyToken, middleware.verifyAdd.verifyKaryawan],
+        controllerKaryawan.addKaryawan
+    )
+
+    app.post(
+        "/api/admin/delete/karyawan",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataKaryawan],
+        controllerKaryawan.deleteKaryawan
+    )
+
+    app.post(
+        "/api/admin/update/karyawan",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataKaryawan],
+        controllerKaryawan.updateKaryawan
+    )
+
+    // end Karyawan
+
+    // warga
+    app.post(
+        "/api/admin/insert/warga",
+        [authJwt.verifyToken, middleware.verifyAdd.verifyWarga],
+        controllerWarga.addWarga
+    )
+
+    app.post(
+        "/api/admin/delete/warga",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataWarga],
+        controllerWarga.deleteWarga
+    )
+
+    app.post(
+        "/api/admin/update/warga",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataWarga],
+        controllerWarga.updateWarga
+    )
+
+    // End Warga
+
+    // Kasbon
+
+    app.post(
+        "/api/admin/insert/kasbon",
+        [authJwt.verifyToken, middleware.verifyAdd.verifyKasbon],
+        controllerKasbon.addKasbon
+    )
+
+    app.post(
+        "/api/admin/delete/kasbon",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataKasbon],
+        controllerKasbon.deleteKasbon
+    )
+
+    app.post(
+        "/api/admin/update/kasbon",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataKasbon],
+        controllerKasbon.updateKasbon
+    )
+    
+
+    app.get(
+        "/api/admin/mock/data",
+        controllerKaryawan.mockData
+    )
+
+    // End Kasbon
 
 };

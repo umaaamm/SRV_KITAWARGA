@@ -9,6 +9,9 @@ module.exports = (sequelize, Sequelize) => {
       nama_karyawan: {
         type: Sequelize.STRING
       },
+      id_karyawan: {
+        type: Sequelize.STRING
+      },
       detail_transaksi: {
         type: Sequelize.STRING
       },
