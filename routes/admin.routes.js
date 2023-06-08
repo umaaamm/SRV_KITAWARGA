@@ -147,6 +147,11 @@ module.exports = function (app) {
         controllerKaryawan.mockData
     )
 
+    app.get(
+        "/api/admin/mock/datalist",
+        controllerKaryawan.mockDataList
+    )
+
     // End Kasbon
 
 };

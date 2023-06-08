@@ -57,3 +57,33 @@ exports.mockData = (req, res) => {
             
     res.status(200).json({ message: "Berhasil Get Data Summary.", data: data });
 };
+
+exports.mockDataList = (req, res) => {
+
+    let data = [{
+        "nama": "Arif",
+        "tanggal": "1686193241",
+        "balance":"10300",
+        "keterangan": "1"
+    },
+    {
+        "nama": "Yoga Tomi",
+        "tanggal": "1686193241",
+        "balance":"10200",
+        "keterangan": "0"
+    },
+    {
+        "nama": "Dhimas",
+        "tanggal": "1686193241",
+        "balance":"15000",
+        "keterangan": "1"
+    },
+    {
+        "nama": "Reza",
+        "tanggal": "1686193241",
+        "balance":"15000",
+        "keterangan": "0"
+    }]
+            
+    res.status(200).json({ message: "Berhasil Get Data Summary.", data: data });
+};
