@@ -144,11 +144,13 @@ module.exports = function (app) {
 
     app.get(
         "/api/admin/mock/data",
+        [authJwt.verifyToken],
         controllerKaryawan.mockData
     )
 
     app.get(
         "/api/admin/mock/datalist",
+        [authJwt.verifyToken],
         controllerKaryawan.mockDataList
     )
 
