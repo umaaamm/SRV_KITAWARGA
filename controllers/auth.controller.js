@@ -13,12 +13,13 @@ exports.signup = (req, res) => {
     username_admin: req.body.username_admin,
     email_admin: req.body.email_admin,
     password_admin: bcrypt.hashSync(req.body.password_admin, 8),
-    no_hp_admin:req.body.no_hp_admin,
-    nama_admin:req.body.nama_admin,
-    role:req.body.role
+    no_hp_admin: req.body.no_hp_admin,
+    nama_admin: req.body.nama_admin,
+    role: req.body.role,
+    id_pengurus: req.body.id_pengurus
   })
     .then(user => {
-          res.status(200).send({ message: "User was registered successfully!" });
+      res.status(200).send({ message: "User was registered successfully!" });
     })
     .catch(err => {
       res.status(500).send({ message: err.message });
@@ -28,7 +29,7 @@ exports.signup = (req, res) => {
 exports.signin = (req, res) => {
   User.findOne({
     where: {
-      email_admin: req.body.email_admin
+      username_admin: req.body.username_admin
     }
   })
     .then(user => {
@@ -48,19 +49,19 @@ exports.signin = (req, res) => {
         });
       }
 
-      var token = jwt.sign({ id: user.id }, config.secret, {
-        expiresIn: 86400 // 24 hours
+      var token = jwt.sign({ id: user.id, role: user.role, nama: user.nama_admin }, config.secret, {
+        expiresIn: 3600 // 1 hours
       });
 
       var authorities = [];
 
-        res.status(200).send({
-          id: user.id,
-          username: user.username_admin,
-          email: user.email_admin,
-          role: user.role,
-          accessToken: token,
-        });
+      res.status(200).send({
+        id: user.id,
+        username: user.username_admin,
+        email: user.email_admin,
+        role: user.role,
+        accessToken: token,
+      });
     })
     .catch(err => {
       res.status(500).send({ message: err.message });

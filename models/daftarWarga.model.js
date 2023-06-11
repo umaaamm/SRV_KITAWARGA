@@ -1,7 +1,8 @@
 module.exports = (sequelize, Sequelize) => {
     const DaftarWarga = sequelize.define("tb_daftar_warga", {
       id_warga: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        primaryKey: true
       },
       nama_warga: {
         type: Sequelize.STRING
@@ -17,7 +18,22 @@ module.exports = (sequelize, Sequelize) => {
       },
       nomor_hp: {
         type: Sequelize.STRING
-      }
+      },
+      is_rw: {
+        type: Sequelize.BOOLEAN
+      },
+      is_rt: {
+        type: Sequelize.BOOLEAN
+      },
+      id_rw: {
+        type: Sequelize.STRING
+      },
+      id_rt: {
+        type: Sequelize.STRING
+      },
+      id_perumahan: {
+        type: Sequelize.STRING
+      },
     });
   
     return DaftarWarga;

@@ -5,6 +5,9 @@ const PENGELUARAN = db.pengeluaran
 const KARYAWAN = db.manajemenKaryawan
 const WARGA = db.daftarWarga
 const KASBON = db.kasbon
+const RT = db.rt
+const RW = db.rw
+const PENGURUS = db.pengurus
 
 
 checkDuplicateRole = (req, res, next) => {
@@ -63,7 +66,7 @@ checkDataKategori = (req, res, next) => {
     }).then(user => {
         if (!user) {
             res.status(400).send({
-                message: "Failed! Kategori is already in database!"
+                message: "Failed! Data tidak ada dalam database!"
             });
             return;
         }
@@ -97,7 +100,7 @@ checkDataPengeluaran = (req, res, next) => {
     }).then(user => {
         if (!user) {
             res.status(400).send({
-                message: "Failed! Pengeluaran is already in database!"
+                message: "Failed! Data tidak ada dalam database!"
             });
             return;
         }
@@ -132,7 +135,7 @@ checkDataKaryawan = (req, res, next) => {
     }).then(user => {
         if (!user) {
             res.status(400).send({
-                message: "Failed! Karyawan is already in database!"
+                message: "Failed! Data tidak ada dalam database!"
             });
             return;
         }
@@ -167,7 +170,7 @@ checkDataWarga = (req, res, next) => {
     }).then(user => {
         if (!user) {
             res.status(400).send({
-                message: "Failed! Warga is already in database!"
+                message: "Failed! Data tidak ada dalam database!"
             });
             return;
         }
@@ -202,7 +205,58 @@ checkDataKasbon = (req, res, next) => {
     }).then(user => {
         if (!user) {
             res.status(400).send({
-                message: "Failed! Warga is already in database!"
+                message: "Failed! Data tidak ada dalam database!!"
+            });
+            return;
+        }
+        next();
+    });
+};
+
+
+checkDataRT = (req, res, next) => {
+    RT.findOne({
+        where: {
+            id_rt: req.body.id_rt
+        }
+    }).then(user => {
+        if (!user) {
+            res.status(400).send({
+                message: "Failed! Data tidak ada dalam database!!"
+            });
+            return;
+        }
+        next();
+    });
+};
+
+
+checkDataRW = (req, res, next) => {
+    RW.findOne({
+        where: {
+            id_rw: req.body.id_rw
+        }
+    }).then(user => {
+        if (!user) {
+            res.status(400).send({
+                message: "Failed! Data tidak ada dalam database!!"
+            });
+            return;
+        }
+        next();
+    });
+};
+
+
+checkDataPengurus = (req, res, next) => {
+    PENGURUS.findOne({
+        where: {
+            id_pengurus: req.body.id_pengurus
+        }
+    }).then(user => {
+        if (!user) {
+            res.status(400).send({
+                message: "Failed! Data tidak ada dalam database!!"
             });
             return;
         }
@@ -223,7 +277,10 @@ const verifyAdd = {
     checkDataWarga: checkDataWarga,
     verifyWarga: checkDuplicateWarga,
     checkDataKasbon: checkDataKasbon,
-    verifyKasbon: checkDuplicateKasbon
+    verifyKasbon: checkDuplicateKasbon,
+    checkDataRT: checkDataRT,
+    checkDataRW: checkDataRW,
+    checkDataPengurus: checkDataPengurus,
 };
 
 module.exports = verifyAdd;

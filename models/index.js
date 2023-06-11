@@ -32,5 +32,11 @@ db.kasbon = require("../models/kasbon.model.js")(sequelize, Sequelize);
 db.kategori = require("../models/kategori.model.js")(sequelize, Sequelize);
 db.manajemenKaryawan = require("../models/manajemenKaryawan.model.js")(sequelize, Sequelize);
 db.daftarWarga = require("../models/daftarWarga.model.js")(sequelize, Sequelize);
+db.pengurus = require("../models/pengurus.model.js")(sequelize, Sequelize);
+db.perumahan = require("../models/perumahan.model.js")(sequelize, Sequelize);
+db.rt = require("../models/rt.model.js")(sequelize, Sequelize);
+db.rw = require("../models/rw.model.js")(sequelize, Sequelize);
+db.summary = require("../models/summary.model.js")(sequelize, Sequelize);
+
 
 module.exports = db;

@@ -1,16 +1,16 @@
 module.exports = (sequelize, Sequelize) => {
-    const Kategori = sequelize.define("tb_ketegori", {
-      id_kategori: {
+    const Role = sequelize.define("tb_rt", {
+      id_rt: {
         type: Sequelize.STRING,
         primaryKey: true
       },
-      nama_kategori_transaksi: {
+      nomor_rt: {
         type: Sequelize.STRING
       },
-      keterangan_kategori_transaksi: {
+      id_perumahan: {
         type: Sequelize.STRING
-      }
+      },
     });
   
-    return Kategori;
+    return Role;
   };

@@ -1,6 +1,10 @@
 module.exports = (sequelize, Sequelize) => {
     const Pemasukan = sequelize.define("tb_pemasukan", {
       id_transaksi: {
+        type: Sequelize.STRING,
+        primaryKey: true
+      },
+      id_warga: {
         type: Sequelize.STRING
       },
       nama_pembayar: {
@@ -13,7 +17,7 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING
       },
       nilai_transaksi: {
-        type: Sequelize.STRING
+        type: Sequelize.DECIMAL
       }
     });
   

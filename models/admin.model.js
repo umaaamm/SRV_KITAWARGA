@@ -1,7 +1,8 @@
 module.exports = (sequelize, Sequelize) => {
   const Admin = sequelize.define("tb_admin", {
     username_admin: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      primaryKey: true
     },
     nama_admin: {
       type: Sequelize.STRING
@@ -16,6 +17,9 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING
     },
     role: {
+      type: Sequelize.INTEGER
+    },
+    id_pengurus:{
       type: Sequelize.STRING
     }
   });

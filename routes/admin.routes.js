@@ -5,6 +5,9 @@ const controllerPengeluaran = require("../controllers/pengeluaran.controller");
 const controllerKaryawan = require("../controllers/karyawan.controller");
 const controllerWarga = require("../controllers/warga.controller");
 const controllerKasbon = require("../controllers/kasbon.controller");
+const controllerRT = require("../controllers/rt.controller");
+const controllerRW = require("../controllers/rw.controller");
+const controllerPengurus = require("../controllers/pengurus.controller");
 
 const middleware = require("../middleware");
 
@@ -140,7 +143,7 @@ module.exports = function (app) {
         [authJwt.verifyToken, middleware.verifyAdd.checkDataKasbon],
         controllerKasbon.updateKasbon
     )
-    
+
 
     app.get(
         "/api/admin/mock/data",
@@ -155,5 +158,69 @@ module.exports = function (app) {
     )
 
     // End Kasbon
+
+    // start rt
+    app.post(
+        "/api/admin/insert/rt",
+        [authJwt.verifyToken],
+        controllerRT.addRT
+    )
+
+    app.post(
+        "/api/admin/delete/rt",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataRT],
+        controllerRT.deleteRT
+    )
+
+    app.post(
+        "/api/admin/update/rt",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataRT],
+        controllerRT.updateRT
+    )
+
+    // end rt
+
+    // start rw
+    app.post(
+        "/api/admin/insert/rw",
+        [authJwt.verifyToken],
+        controllerRW.addRW
+    )
+
+    app.post(
+        "/api/admin/delete/rw",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataRW],
+        controllerRW.deleteRW
+    )
+
+    app.post(
+        "/api/admin/update/rw",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataRW],
+        controllerRW.updateRW
+    )
+
+    // end rw
+
+
+    // start pengurus
+    app.post(
+        "/api/admin/insert/pengurus]",
+        [authJwt.verifyToken],
+        controllerPengurus.addPENGURUS
+    )
+
+    app.post(
+        "/api/admin/delete/pengurus",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataPengurus],
+        controllerPengurus.deletePENGURUS
+    )
+
+    app.post(
+        "/api/admin/update/pengurus",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataPengurus],
+        controllerPengurus.updatePENGURUS
+    )
+
+    // end pengurus
 
 };
