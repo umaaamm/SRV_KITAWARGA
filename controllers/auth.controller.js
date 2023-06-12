@@ -29,7 +29,7 @@ exports.signup = (req, res) => {
 exports.signin = (req, res) => {
   User.findOne({
     where: {
-      username_admin: req.body.username_admin
+      email_admin: req.body.email_admin
     }
   })
     .then(user => {
