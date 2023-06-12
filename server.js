@@ -27,7 +27,7 @@ db.sequelize.sync({force: true}).then(() => {
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to KitaWarga services." });
+  res.json({ message: "Welcome to KitaWarga services, You will never understand, how this works. :)" });
 });
 
 // routes

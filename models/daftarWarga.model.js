@@ -34,6 +34,12 @@ module.exports = (sequelize, Sequelize) => {
       id_perumahan: {
         type: Sequelize.STRING
       },
+      status_pernikahan: {
+        type: Sequelize.STRING
+      },
+      jenis_kelamin: {
+        type: Sequelize.STRING
+      },
     });
   
     return DaftarWarga;
