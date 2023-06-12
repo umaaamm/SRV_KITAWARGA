@@ -122,6 +122,12 @@ module.exports = function (app) {
         controllerWarga.updateWarga
     )
 
+    app.post(
+        "/api/admin/list/warga",
+        [authJwt.verifyToken],
+        controllerWarga.listWarga
+    )
+
     // End Warga
 
     // Kasbon

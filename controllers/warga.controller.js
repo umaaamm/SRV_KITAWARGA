@@ -61,3 +61,23 @@ exports.updateWarga = (req, res) => {
             res.status(500).send({ message: err.message });
         });
 };
+
+
+exports.listWarga = (req, res) => {
+
+    // SELECT * FROM tb_daftar_wargas JOIN tb_perumahans ON tb_daftar_wargas.id_perumahan = tb_perumahans.id_perumahan JOIN tb_rts ON tb_daftar_wargas.id_rt = tb_rts.id_rt JOIN tb_rws ON tb_daftar_wargas.id_rw = tb_rws.id_rw
+
+    db.sequelize.query(
+        "SELECT * FROM tb_daftar_wargas JOIN tb_perumahans ON tb_daftar_wargas.id_perumahan = tb_perumahans.id_perumahan WHERE tb_daftar_wargas.id_perumahan = :id_perumahan",
+        {
+            replacements: { id_perumahan: req.body.id_perumahan },
+            type: db.sequelize.QueryTypes.SELECT
+        }
+    ).then(result => {
+        res.status(200).json({ message: "Berhasil Get Data Warga.", data: result });
+    })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+
+};

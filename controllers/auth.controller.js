@@ -1,7 +1,7 @@
 const db = require("../models");
 const config = require("../config/auth.config");
 const User = db.admin;
-const Role = db.role;
+const Pengurus = db.pengurus;
 
 const Op = db.Sequelize.Op;
 
@@ -49,19 +49,27 @@ exports.signin = (req, res) => {
         });
       }
 
-      var token = jwt.sign({ id: user.id, role: user.role, nama: user.nama_admin }, config.secret, {
-        expiresIn: 3600 // 1 hours
-      });
+      Pengurus.findOne({
+        where: {
+          id_pengurus: user.id_pengurus
+        }
+      })
+        .then(pengurus => {
 
-      var authorities = [];
-
-      res.status(200).send({
-        id: user.id,
-        username: user.username_admin,
-        email: user.email_admin,
-        role: user.role,
-        accessToken: token,
-      });
+          var token = jwt.sign({ id: user.id, role: user.role, nama: user.nama_admin }, config.secret, {
+            expiresIn: 3600 // 1 hours
+          });
+          
+          res.status(200).send({
+            id_pengurus: user.id_pengurus,
+            id_perumahan: pengurus.id_perumahan,
+            id_warga: pengurus.id_warga,
+            username: user.username_admin,
+            email: user.email_admin,
+            role: user.role,
+            accessToken: token,
+          });
+        });
     })
     .catch(err => {
       res.status(500).send({ message: err.message });
