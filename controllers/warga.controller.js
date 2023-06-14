@@ -67,10 +67,23 @@ exports.listWarga = (req, res) => {
 
     // SELECT * FROM tb_daftar_wargas JOIN tb_perumahans ON tb_daftar_wargas.id_perumahan = tb_perumahans.id_perumahan JOIN tb_rts ON tb_daftar_wargas.id_rt = tb_rts.id_rt JOIN tb_rws ON tb_daftar_wargas.id_rw = tb_rws.id_rw
 
+    //** 1. ASC, 2. DESC, 3. Searching */
+
+    let query = '';
+    if (req.body.param == 1) {
+        query = "SELECT * FROM tb_daftar_wargas JOIN tb_perumahans ON tb_daftar_wargas.id_perumahan = tb_perumahans.id_perumahan WHERE tb_daftar_wargas.id_perumahan = :id_perumahan ORDER BY tb_daftar_wargas.nama_warga ASC";
+    }
+    if (req.body.param == 2) {
+        query = "SELECT * FROM tb_daftar_wargas JOIN tb_perumahans ON tb_daftar_wargas.id_perumahan = tb_perumahans.id_perumahan WHERE tb_daftar_wargas.id_perumahan = :id_perumahan ORDER BY tb_daftar_wargas.nama_warga DESC";
+    }
+    if (req.body.param == 3) {
+        query = "SELECT * FROM tb_daftar_wargas JOIN tb_perumahans ON tb_daftar_wargas.id_perumahan = tb_perumahans.id_perumahan WHERE tb_daftar_wargas.id_perumahan = :id_perumahan AND tb_daftar_wargas.nama_warga LIKE :nama  ORDER BY tb_daftar_wargas.nama_warga ASC";
+    }
+
     db.sequelize.query(
-        "SELECT * FROM tb_daftar_wargas JOIN tb_perumahans ON tb_daftar_wargas.id_perumahan = tb_perumahans.id_perumahan WHERE tb_daftar_wargas.id_perumahan = :id_perumahan",
+        query,
         {
-            replacements: { id_perumahan: req.body.id_perumahan },
+            replacements: { id_perumahan: req.body.id_perumahan, nama: '%'+req.body.nama+'%' },
             type: db.sequelize.QueryTypes.SELECT
         }
     ).then(result => {
