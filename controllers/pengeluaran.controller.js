@@ -56,7 +56,7 @@ exports.updatePengeluaran = (req, res) => {
 
 exports.listPengeluaran = (req, res) => {
     db.sequelize.query(
-        "SELECT * FROM tb_pengeluarans JOIN tb_ketegoris ON tb_pengeluarans.id_kategori = tb_ketegoris.id_kategori JOIN tb_kasbons ON tb_pengeluarans.id_kasbon = tb_kasbons.id_kasbon",
+        "SELECT * FROM tb_pengeluarans JOIN tb_ketegoris ON tb_pengeluarans.id_kategori = tb_ketegoris.id_kategori JOIN tb_kasbons ON tb_pengeluarans.id_kasbon = tb_kasbons.id_transaksi",
         {
             type: db.sequelize.QueryTypes.SELECT
         }
