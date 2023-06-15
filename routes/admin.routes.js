@@ -8,6 +8,7 @@ const controllerKasbon = require("../controllers/kasbon.controller");
 const controllerRT = require("../controllers/rt.controller");
 const controllerRW = require("../controllers/rw.controller");
 const controllerPengurus = require("../controllers/pengurus.controller");
+const controllerPerumahan = require("../controllers/perumahan.controller");
 
 const middleware = require("../middleware");
 
@@ -39,6 +40,12 @@ module.exports = function (app) {
         controllerRole.updateRole
     )
 
+    app.get(
+        "/api/admin/list/role",
+        [authJwt.verifyToken],
+        controllerRole.listRole
+    )
+
     // end role
 
     // kategori
@@ -58,6 +65,12 @@ module.exports = function (app) {
         "/api/admin/update/kategori",
         [authJwt.verifyToken, middleware.verifyAdd.checkDataKategori],
         controllerKategori.updateKategori
+    )
+
+    app.get(
+        "/api/admin/list/kategori",
+        [authJwt.verifyToken],
+        controllerKategori.listKategori
     )
     // end kategori
 
@@ -80,6 +93,12 @@ module.exports = function (app) {
         controllerPengeluaran.updatePengeluaran
     )
 
+    app.get(
+        "/api/admin/list/pengeluaran",
+        [authJwt.verifyToken],
+        controllerPengeluaran.listPengeluaran
+    )
+
     // end Pengeluaran
 
     // karyawan
@@ -99,6 +118,12 @@ module.exports = function (app) {
         "/api/admin/update/karyawan",
         [authJwt.verifyToken, middleware.verifyAdd.checkDataKaryawan],
         controllerKaryawan.updateKaryawan
+    )
+
+    app.get(
+        "/api/admin/list/karyawan",
+        [authJwt.verifyToken],
+        controllerKaryawan.listKaryawan
     )
 
     // end Karyawan
@@ -150,6 +175,12 @@ module.exports = function (app) {
         controllerKasbon.updateKasbon
     )
 
+    app.get(
+        "/api/admin/list/kasbon",
+        [authJwt.verifyToken],
+        controllerKasbon.listKasbon
+    )
+
 
     app.get(
         "/api/admin/mock/data",
@@ -184,6 +215,12 @@ module.exports = function (app) {
         controllerRT.updateRT
     )
 
+    app.get(
+        "/api/admin/list/rt",
+        [authJwt.verifyToken],
+        controllerRT.listRT
+    )
+
     // end rt
 
     // start rw
@@ -205,12 +242,18 @@ module.exports = function (app) {
         controllerRW.updateRW
     )
 
+    app.get(
+        "/api/admin/list/rw",
+        [authJwt.verifyToken],
+        controllerRW.listRW
+    )
+
     // end rw
 
 
     // start pengurus
     app.post(
-        "/api/admin/insert/pengurus]",
+        "/api/admin/insert/pengurus",
         [authJwt.verifyToken],
         controllerPengurus.addPENGURUS
     )
@@ -227,6 +270,39 @@ module.exports = function (app) {
         controllerPengurus.updatePENGURUS
     )
 
+    app.get(
+        "/api/admin/list/pengurus",
+        [authJwt.verifyToken],
+        controllerPengurus.listPengurus
+    )
+
     // end pengurus
+
+    // perumahan
+    app.post(
+        "/api/admin/insert/perumahan",
+        [authJwt.verifyToken],
+        controllerPerumahan.addPERUMAHAN
+    )
+
+    app.post(
+        "/api/admin/delete/perumahan",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataPerumahan],
+        controllerPerumahan.deletePERUMAHAN
+    )
+
+    app.post(
+        "/api/admin/update/perumahan",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataPerumahan],
+        controllerPerumahan.updatePERUMAHAN
+    )
+
+    app.get(
+        "/api/admin/list/perumahan",
+        [authJwt.verifyToken],
+        controllerPerumahan.listPerumahan
+    )
+
+    // end
 
 };

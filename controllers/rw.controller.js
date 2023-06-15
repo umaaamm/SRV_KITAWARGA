@@ -41,3 +41,17 @@ exports.updateRW = (req, res) => {
             res.status(500).send({ message: err.message });
         });
 };
+
+exports.listRW = (req, res) => {
+    db.sequelize.query(
+        "SELECT * FROM tb_rws",
+        {
+            type: db.sequelize.QueryTypes.SELECT
+        }
+    ).then(result => {
+        res.status(200).json({ message: "Berhasil Get Data RW.", data: result });
+    })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+};

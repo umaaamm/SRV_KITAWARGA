@@ -51,3 +51,19 @@ exports.updatePengeluaran = (req, res) => {
             res.status(500).send({ message: err.message });
         });
 };
+
+
+
+exports.listPengeluaran = (req, res) => {
+    db.sequelize.query(
+        "SELECT * FROM tb_pengeluarans JOIN tb_ketegoris ON tb_pengeluarans.id_kategori = tb_ketegoris.id_kategori JOIN tb_kasbons ON tb_pengeluarans.id_kasbon = tb_kasbons.id_kasbon",
+        {
+            type: db.sequelize.QueryTypes.SELECT
+        }
+    ).then(result => {
+        res.status(200).json({ message: "Berhasil Get Data Pengeluaran.", data: result });
+    })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+};

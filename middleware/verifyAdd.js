@@ -8,6 +8,7 @@ const KASBON = db.kasbon
 const RT = db.rt
 const RW = db.rw
 const PENGURUS = db.pengurus
+const PERUMAHAN = db.perumahan
 
 
 checkDuplicateRole = (req, res, next) => {
@@ -264,6 +265,21 @@ checkDataPengurus = (req, res, next) => {
     });
 };
 
+checkDataPerumahan = (req, res, next) => {
+    PERUMAHAN.findOne({
+        where: {
+            id_perumahan: req.body.id_perumahan
+        }
+    }).then(user => {
+        if (!user) {
+            res.status(400).send({
+                message: "Failed! Data tidak ada dalam database!!"
+            });
+            return;
+        }
+        next();
+    });
+};
 
 const verifyAdd = {
     verifyRole: checkDuplicateRole,
@@ -281,6 +297,7 @@ const verifyAdd = {
     checkDataRT: checkDataRT,
     checkDataRW: checkDataRW,
     checkDataPengurus: checkDataPengurus,
+    checkDataPerumahan: checkDataPerumahan
 };
 
 module.exports = verifyAdd;

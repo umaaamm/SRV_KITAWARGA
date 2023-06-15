@@ -41,3 +41,17 @@ exports.updatePENGURUS = (req, res) => {
             res.status(500).send({ message: err.message });
         });
 };
+
+exports.listPengurus = (req, res) => {
+    db.sequelize.query(
+        "SELECT * FROM tb_pengurus JOIN tb_daftar_wargas ON tb_pengurus.id_warga = tb_daftar_wargas.id_warga JOIN tb_perumahans ON tb_pengurus.id_perumahan = tb_perumahans.id_perumahan",
+        {
+            type: db.sequelize.QueryTypes.SELECT
+        }
+    ).then(result => {
+        res.status(200).json({ message: "Berhasil Get Data Pengurus.", data: result });
+    })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+};

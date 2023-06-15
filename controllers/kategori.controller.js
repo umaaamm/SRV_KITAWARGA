@@ -41,3 +41,18 @@ exports.updateKategori = (req, res) => {
             res.status(500).send({ message: err.message });
         });
 };
+
+
+exports.listKategori = (req, res) => {
+    db.sequelize.query(
+        "SELECT * FROM tb_ketegoris",
+        {
+            type: db.sequelize.QueryTypes.SELECT
+        }
+    ).then(result => {
+        res.status(200).json({ message: "Berhasil Get Data Kategori.", data: result });
+    })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+};
