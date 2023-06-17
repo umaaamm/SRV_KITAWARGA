@@ -75,3 +75,29 @@ exports.signin = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
+
+exports.updatePassword = (req, res) => {
+  User.update({
+    password_admin: bcrypt.hashSync(req.body.new_password, 8),
+  }, { where: { username_admin: req.body.username_admin } })
+    .then(user => {
+      res.status(200).send({ message: "Berhasil diperbaharui password!." });
+    })
+    .catch(err => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
+exports.listAdmin = (req, res) => {
+  db.sequelize.query(
+    "SELECT * FROM tb_admins JOIN tb_pengurus ON tb_admins.id_pengurus = tb_pengurus.id_pengurus JOIN roles ON tb_admins.role = roles.id",
+    {
+      type: db.sequelize.QueryTypes.SELECT
+    })
+    .then(user => {
+      res.status(200).json({ message: "Berhasil Get Data Admin.", data: result });
+    })
+    .catch(err => {
+      res.status(500).send({ message: err.message });
+    });
+};

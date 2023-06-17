@@ -27,6 +27,9 @@ module.exports = (sequelize, Sequelize) => {
       },
       bukti_foto: {
         type: Sequelize.STRING
+      },
+      id_perumahan:{
+        type: Sequelize.STRING
       }
     });
   

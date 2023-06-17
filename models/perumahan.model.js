@@ -10,6 +10,9 @@ module.exports = (sequelize, Sequelize) => {
       alamat_perumahan: {
         type: Sequelize.STRING
       },
+      biaya_ipl:{
+        type: Sequelize.DECIMAL
+      }
     });
   
     return Role;

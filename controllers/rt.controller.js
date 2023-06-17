@@ -6,6 +6,7 @@ exports.addRT = (req, res) => {
         id_rt: req.body.id_rt,
         nomor_rt: req.body.nomor_rt,
         id_perumahan: req.body.id_perumahan,
+        id_rw: req.body.id_rw
     })
         .then(user => {
             res.status(200).send({ message: "RT berhasil ditambah!." });
@@ -33,6 +34,7 @@ exports.updateRT = (req, res) => {
         id_rt: req.body.id_rt,
         nomor_rt: req.body.nomor_rt,
         id_perumahan: req.body.id_perumahan,
+        id_rw: req.body.id_rw
     }, { where: { id_warga: req.body.id_warga } })
         .then(user => {
             res.status(200).send({ message: "RT berhasil diperbaharui!." });
@@ -44,7 +46,7 @@ exports.updateRT = (req, res) => {
 
 exports.listRT = (req, res) => {
     db.sequelize.query(
-        "SELECT * FROM tb_rts",
+        "SELECT * FROM tb_rts JOIN tb_rws ON tb_rts.id_rw = tb_rws.id_rw",
         {
             type: db.sequelize.QueryTypes.SELECT
         }

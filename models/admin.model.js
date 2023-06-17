@@ -17,7 +17,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING
     },
     role: {
-      type: Sequelize.INTEGER
+      type: Sequelize.STRING
     },
     id_pengurus:{
       type: Sequelize.STRING

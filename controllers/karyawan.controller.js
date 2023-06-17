@@ -7,6 +7,7 @@ exports.addKaryawan = (req, res) => {
         nama_karyawan: req.body.nama_karyawan,
         posisi: req.body.posisi,
         sisa_kasbon: req.body.sisa_kasbon,
+        id_perumahan: req.body.id_perumahan
     })
         .then(user => {
             res.status(200).send({ message: "Karyawan berhasil ditambah!." });
@@ -35,6 +36,7 @@ exports.updateKaryawan = (req, res) => {
         nama_karyawan: req.body.nama_karyawan,
         posisi: req.body.posisi,
         sisa_kasbon: req.body.sisa_kasbon,
+        id_perumahan: req.body.id_perumahan
     }, { where: { id_karyawan: req.body.id_karyawan } })
         .then(user => {
             res.status(200).send({ message: "Karyawan berhasil diperbaharui!." });

@@ -9,7 +9,9 @@ const RT = db.rt
 const RW = db.rw
 const PENGURUS = db.pengurus
 const PERUMAHAN = db.perumahan
+const ADMIN = db.admin
 
+var bcrypt = require("bcryptjs");
 
 checkDuplicateRole = (req, res, next) => {
     ROLE.findOne({
@@ -281,6 +283,37 @@ checkDataPerumahan = (req, res, next) => {
     });
 };
 
+checkDataAdmin = (req, res, next) => {
+    ADMIN.findOne({
+        where: {
+            username_admin: req.body.username_admin
+        }
+    }).then(admin => {
+
+        if (!admin) {
+            res.status(400).send({
+                message: "Failed! Data tidak ada dalam database!"
+            });
+            return;
+        }
+
+        var passwordIsValid = bcrypt.compareSync(
+            req.body.password_admin,
+            admin.password_admin
+          );
+
+        if(!passwordIsValid){
+            res.status(400).send({
+                message: "Failed! Password lama tidak sesuai!"
+            });
+            return;
+        }
+
+        
+        next();
+    });
+};
+
 const verifyAdd = {
     verifyRole: checkDuplicateRole,
     verifyKategori: checkDuplicateKategori,
@@ -297,7 +330,8 @@ const verifyAdd = {
     checkDataRT: checkDataRT,
     checkDataRW: checkDataRW,
     checkDataPengurus: checkDataPengurus,
-    checkDataPerumahan: checkDataPerumahan
+    checkDataPerumahan: checkDataPerumahan,
+    checkDataAdmin: checkDataAdmin
 };
 
 module.exports = verifyAdd;

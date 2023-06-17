@@ -19,10 +19,10 @@ module.exports = (sequelize, Sequelize) => {
       pinjaman: {
         type: Sequelize.DECIMAL
       },
-      angsuran: {
+      tenor: {
         type: Sequelize.STRING
       },
-      balance: {
+      angsuran_per_bulan: {
         type: Sequelize.DECIMAL
       },
       keterangan: {

@@ -9,8 +9,27 @@ const controllerRT = require("../controllers/rt.controller");
 const controllerRW = require("../controllers/rw.controller");
 const controllerPengurus = require("../controllers/pengurus.controller");
 const controllerPerumahan = require("../controllers/perumahan.controller");
+const controllerAdmin = require("../controllers/auth.controller");
 
 const middleware = require("../middleware");
+const multer = require('multer')
+const path = require("path");
+
+
+// akan digunakan jika sudah perlu
+
+// const diskStorage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, path.join(__dirname, "../upload"));
+//     },
+//     // konfigurasi penamaan file yang unik
+//     filename: function (req, file, cb) {
+//       cb(
+//         null,
+//         file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+//       );
+//     },
+//   });
 
 module.exports = function (app) {
     app.use(function (req, res, next) {
@@ -20,6 +39,18 @@ module.exports = function (app) {
         );
         next();
     });
+
+    app.post(
+        "/api/admin/update/password",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataAdmin],
+        controllerAdmin.updatePassword
+    )
+
+    app.get(
+        "/api/admin/list/admin",
+        [authJwt.verifyToken],
+        controllerAdmin.listAdmin
+    )
 
     // role
     app.post(
@@ -75,6 +106,8 @@ module.exports = function (app) {
     // end kategori
 
     // Pengeluaran
+
+    //  "/api/admin/insert/pengeluaran",multer({ storage: diskStorage }).single('bukti_foto'),
     app.post(
         "/api/admin/insert/pengeluaran",
         [authJwt.verifyToken, middleware.verifyAdd.verifyPengeluaran],
@@ -93,7 +126,7 @@ module.exports = function (app) {
         controllerPengeluaran.updatePengeluaran
     )
 
-    app.get(
+    app.post(
         "/api/admin/list/pengeluaran",
         [authJwt.verifyToken],
         controllerPengeluaran.listPengeluaran
@@ -175,7 +208,7 @@ module.exports = function (app) {
         controllerKasbon.updateKasbon
     )
 
-    app.get(
+    app.post(
         "/api/admin/list/kasbon",
         [authJwt.verifyToken],
         controllerKasbon.listKasbon
