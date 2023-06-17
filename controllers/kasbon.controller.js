@@ -3,7 +3,7 @@ const Kasbon = db.kasbon;
 
 exports.addKasbon = (req, res) => {
     Kasbon.create({
-        id_transaksi: req.body.id_transaksi,
+        id_kasbon: req.body.id_kasbon,
         tanggal_transaksi: req.body.tanggal_transaksi,
         nama_karyawan: req.body.nama_karyawan,
         id_karyawan: req.body.id_karyawan,
@@ -24,7 +24,7 @@ exports.addKasbon = (req, res) => {
 exports.deleteKasbon = (req, res) => {
     Kasbon.destroy({
         where: {
-            id_transaksi: req.body.id_transaksi
+            id_kasbon: req.body.id_kasbon
         }
     }).then(user => {
         res.status(200).send({ message: "Kasbon berhasil dihapus!." });
@@ -36,7 +36,7 @@ exports.deleteKasbon = (req, res) => {
 
 exports.updateKasbon = (req, res) => {
     Kasbon.update({
-        id_transaksi: req.body.id_transaksi,
+        id_kasbon: req.body.id_kasbon,
         tanggal_transaksi: req.body.tanggal_transaksi,
         nama_karyawan: req.body.nama_karyawan,
         id_karyawan: req.body.id_karyawan,
@@ -45,7 +45,7 @@ exports.updateKasbon = (req, res) => {
         tenor: req.body.angsuran,
         angsuran_per_bulan: req.body.balance,
         keterangan: req.body.keterangan,
-    }, { where: { id_transaksi: req.body.id_transaksi } })
+    }, { where: { id_kasbon: req.body.id_kasbon } })
         .then(user => {
             res.status(200).send({ message: "Kasbon berhasil diperbaharui!." });
         })

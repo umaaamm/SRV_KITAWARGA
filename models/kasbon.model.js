@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
     const Kasbon = sequelize.define("tb_kasbon", {
-      id_transaksi: {
+      id_kasbon: {
         type: Sequelize.STRING,
         primaryKey: true
       },
