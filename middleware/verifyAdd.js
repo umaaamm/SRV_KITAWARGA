@@ -187,7 +187,7 @@ checkDataWarga = (req, res, next) => {
 checkDuplicateKasbon = (req, res, next) => {
     KASBON.findOne({
         where: {
-            id_transaksi: req.body.id_transaksi
+            id_kasbon: req.body.id_kasbon
         }
     }).then(user => {
         if (user) {
@@ -203,7 +203,7 @@ checkDuplicateKasbon = (req, res, next) => {
 checkDataKasbon = (req, res, next) => {
     KASBON.findOne({
         where: {
-            id_transaksi: req.body.id_transaksi
+            id_kasbon: req.body.id_kasbon
         }
     }).then(user => {
         if (!user) {

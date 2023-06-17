@@ -55,10 +55,6 @@ exports.updateKasbon = (req, res) => {
 };
 
 
-
-
-
-
 exports.listKasbon = (req, res) => {
 
     let query = '';
