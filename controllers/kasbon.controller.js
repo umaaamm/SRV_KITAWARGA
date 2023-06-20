@@ -67,11 +67,14 @@ exports.listKasbon = (req, res) => {
     if (req.body.param == 3) {
         query = "SELECT * FROM tb_kasbons JOIN tb_manajemen_karyawans ON tb_kasbons.id_karyawan = tb_manajemen_karyawans.id_karyawan JOIN tb_perumahans ON tb_manajemen_karyawans.id_perumahan =  tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan AND tb_manajemen_karyawans.nama_karyawan LIKE :nama ORDER BY tb_manajemen_karyawans.nama_karyawan ASC";
     }
+    if (req.body.param == 4) {
+        query = "SELECT * FROM tb_kasbons JOIN tb_manajemen_karyawans ON tb_kasbons.id_karyawan = tb_manajemen_karyawans.id_karyawan JOIN tb_perumahans ON tb_manajemen_karyawans.id_perumahan =  tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan AND tb_manajemen_karyawans.id_karyawan = :nama_kary ORDER BY tb_manajemen_karyawans.nama_karyawan ASC";
+    }
 
     db.sequelize.query(
         query,
         {
-            replacements: { id_perumahan: req.body.id_perumahan, nama: '%' + req.body.nama + '%' },
+            replacements: { id_perumahan: req.body.id_perumahan, nama_kary:req.body.nama ,nama: '%' + req.body.nama + '%' },
             type: db.sequelize.QueryTypes.SELECT
         }
     ).then(result => {
