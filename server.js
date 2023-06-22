@@ -5,7 +5,7 @@ const cors = require("cors");
 const app = express();
 
 var corsOptions = {
-  origin: "http://api.kitawarga.com:3000"
+  origin: "http://web.kitawarga.com/"
 };
 
 app.use(cors(corsOptions));
