@@ -33,7 +33,7 @@ exports.updateRW = (req, res) => {
         id_rw: req.body.id_rw,
         nomor_rw: req.body.nomor_rw,
         id_perumahan: req.body.id_perumahan,
-    }, { where: { id_warga: req.body.id_warga } })
+    }, { where: { id_rw: req.body.id_rw } })
         .then(user => {
             res.status(200).send({ message: "RW berhasil diperbaharui!." });
         })

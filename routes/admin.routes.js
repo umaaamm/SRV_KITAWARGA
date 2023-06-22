@@ -169,6 +169,12 @@ module.exports = function (app) {
     )
 
     app.post(
+        "/api/admin/profil/warga",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataWarga],
+        controllerWarga.getProfile
+    )
+
+    app.post(
         "/api/admin/delete/warga",
         [authJwt.verifyToken, middleware.verifyAdd.checkDataWarga],
         controllerWarga.deleteWarga

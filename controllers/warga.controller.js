@@ -94,3 +94,19 @@ exports.listWarga = (req, res) => {
         });
 
 };
+
+exports.getProfile = (req, res) => {
+    db.sequelize.query(
+        "SELECT * FROM tb_daftar_wargas JOIN tb_perumahans ON tb_daftar_wargas.id_perumahan = tb_perumahans.id_perumahan WHERE tb_daftar_wargas.id_perumahan = :id_perumahan AND tb_daftar_wargas.id_warga = :id_warga",
+        {
+            replacements: { id_perumahan: req.body.id_perumahan, id_warga: req.body.id_warga },
+            type: db.sequelize.QueryTypes.SELECT
+        }
+    ).then(result => {
+        res.status(200).json({ message: "Berhasil Get Data Warga.", data: result });
+    })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+
+};
