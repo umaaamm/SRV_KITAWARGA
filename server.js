@@ -5,9 +5,10 @@ const cors = require("cors");
 const app = express();
 
 var corsOptions = {
-  origin: "http://web.kitawarga.com/"
+  origin: "http://localhost:3000"
 };
 
+app.options('*', cors()) 
 // app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
