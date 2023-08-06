@@ -6,7 +6,9 @@ exports.addPERUMAHAN = (req, res) => {
         id_perumahan: req.body.id_perumahan,
         nama_perumahan: req.body.nama_perumahan,
         alamat_perumahan: req.body.alamat_perumahan,
-        biaya_ipl: req.body.biaya_ipl
+        biaya_ipl: req.body.biaya_ipl,
+        link_cctv: req.body.link_cctv,
+        link_img_qr: req.body.link_img_qr
     })
         .then(user => {
             res.status(200).send({ message: "Perumahan berhasil ditambah!." });
@@ -34,7 +36,9 @@ exports.updatePERUMAHAN = (req, res) => {
         id_perumahan: req.body.id_perumahan,
         nama_perumahan: req.body.nama_perumahan,
         alamat_perumahan: req.body.alamat_perumahan,
-        biaya_ipl: req.body.biaya_ipl
+        biaya_ipl: req.body.biaya_ipl,
+        link_cctv: req.body.link_cctv,
+        link_img_qr: req.body.link_img_qr
     }, { where: { id_perumahan: req.body.id_perumahan } })
         .then(user => {
             res.status(200).send({ message: "Perumahan berhasil diperbaharui!." });

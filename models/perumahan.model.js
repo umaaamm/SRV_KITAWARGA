@@ -12,6 +12,12 @@ module.exports = (sequelize, Sequelize) => {
       },
       biaya_ipl:{
         type: Sequelize.DECIMAL
+      },
+      link_cctv:{
+        type: Sequelize.STRING
+      },
+      link_img_qr:{
+        type: Sequelize.STRING
       }
     });
   

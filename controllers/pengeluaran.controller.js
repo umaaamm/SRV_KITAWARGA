@@ -1,26 +1,87 @@
 const db = require("../models");
 const Pengeluaran = db.pengeluaran;
+const Karyawan = db.manajemenKaryawan;
+const Kasbon = db.kasbon;
+const Kategori = db.kategori;
+const { v1: uuidv1 } = require('uuid');
 
-exports.addPengeluaran = (req, res) => {
-    Pengeluaran.create({
-        id_transaksi: req.body.id_transaksi,
-        nama_transaksi: req.body.nama_transaksi,
-        id_kategori: req.body.id_kategori,
-        kategori_transaksi: req.body.kategori_transaksi,
-        tanggal_transaksi: req.body.tanggal_transaksi,
-        nilai_transaksi: req.body.nilai_transaksi,
-        keterangan: req.body.keterangan,
-        // bukti_foto: req.file.filename,
-        bukti_foto: 'bukti_foto',
-        id_kasbon: req.body.id_kasbon,
-        id_perumahan: req.body.id_perumahan
-    })
-        .then(user => {
+exports.addPengeluaran = async (req, res) => {
+    Kategori.findOne({
+        where: {
+            id_kategori: req.body.id_kategori
+        }
+    }).then(async (value) => {
+        if (value.nama_kategori_transaksi == "Gaji") {
+
+            if (req.body.data_kasbon.length > 1) {
+                const createdPengeluarans = await Promise.all(
+                    req.body.data_kasbon.map(async (item) => {
+                        Kasbon.findOne({
+                            where: {
+                                id_kasbon: item.id_kasbon
+                            }
+                        }).then(async (value) => {
+                            await Kasbon.update({
+                                tenor: value.tenor - 1,
+                                pinjaman: value.pinjaman - value.angsuran_per_bulan,
+                            }, { where: { id_kasbon: item.id_kasbon } })
+
+                            await Karyawan.findOne({
+                                where: {
+                                    id_karyawan: value.id_karyawan
+                                }
+                            }).then(async (valueK) => {
+                                await Karyawan.update({
+                                    sisa_kasbon: valueK.sisa_kasbon - value.angsuran_per_bulan,
+                                }, { where: { id_karyawan: value.id_karyawan } })
+                            });
+                        }).catch(err => {
+                            res.status(500).send({ message: err.message });
+                        });
+                        const uuid = uuidv1();
+                        await Pengeluaran.create({
+                            id_transaksi: uuid,
+                            nama_transaksi: req.body.nama_transaksi,
+                            id_kategori: req.body.id_kategori,
+                            kategori_transaksi: req.body.kategori_transaksi,
+                            tanggal_transaksi: req.body.tanggal_transaksi,
+                            nilai_transaksi: item.nilai_transaksi,
+                            keterangan: req.body.keterangan,
+                            // bukti_foto: req.file.filename,
+                            bukti_foto: 'bukti_foto',
+                            id_kasbon: item.id_kasbon,
+                            id_perumahan: req.body.id_perumahan
+                        })
+                    }));
+            }
+
             res.status(200).send({ message: "Pengeluaran berhasil ditambah!." });
+            return;
+
+        }
+
+        Pengeluaran.create({
+            id_transaksi: req.body.id_transaksi,
+            nama_transaksi: req.body.nama_transaksi,
+            id_kategori: req.body.id_kategori,
+            kategori_transaksi: req.body.kategori_transaksi,
+            tanggal_transaksi: req.body.tanggal_transaksi,
+            nilai_transaksi: req.body.nilai_transaksi,
+            keterangan: req.body.keterangan,
+            // bukti_foto: req.file.filename,
+            bukti_foto: 'bukti_foto',
+            id_kasbon: req.body.id_kasbon,
+            id_perumahan: req.body.id_perumahan
         })
-        .catch(err => {
-            res.status(500).send({ message: err.message });
-        });
+            .then(user => {
+                res.status(200).send({ message: "Pengeluaran berhasil ditambah!." });
+            })
+            .catch(err => {
+                res.status(500).send({ message: err.message });
+            });
+
+
+    });
 };
 
 exports.deletePengeluaran = (req, res) => {
@@ -72,7 +133,7 @@ exports.listPengeluaran = (req, res) => {
     db.sequelize.query(
         query,
         {
-            replacements: { id_perumahan: req.body.id_perumahan, nama_transaksi: '%'+req.body.nama_transaksi+'%' },
+            replacements: { id_perumahan: req.body.id_perumahan, nama_transaksi: '%' + req.body.nama_transaksi + '%' },
             type: db.sequelize.QueryTypes.SELECT
         }
     ).then(result => {

@@ -15,6 +15,9 @@ module.exports = (sequelize, Sequelize) => {
     },
     id_perumahan: {
       type: Sequelize.STRING
+    },
+    gaji_bulanan:{
+      type: Sequelize.DECIMAL
     }
   });
 
