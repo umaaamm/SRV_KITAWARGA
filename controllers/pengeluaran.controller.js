@@ -3,42 +3,52 @@ const Pengeluaran = db.pengeluaran;
 const Karyawan = db.manajemenKaryawan;
 const Kasbon = db.kasbon;
 const Kategori = db.kategori;
+const Gaji = db.gaji;
+const Pengeluaran_bulanan = db.pengeluaran_bulanan;
 const { v1: uuidv1 } = require('uuid');
 
 exports.addPengeluaran = async (req, res) => {
-    Kategori.findOne({
-        where: {
-            id_kategori: req.body.id_kategori
-        }
-    }).then(async (value) => {
-        if (value.nama_kategori_transaksi == "Gaji") {
+    try {
+        const kategori = await Kategori.findOne({
+            where: {
+                id_kategori: req.body.id_kategori
+            }
+        });
+
+        if (kategori.nama_kategori_transaksi == "Gaji") {
+            var totalGaji = 0;
+            var potongan = 0;
+            var idKaryawan = '';
 
             if (req.body.data_kasbon.length > 1) {
                 const createdPengeluarans = await Promise.all(
                     req.body.data_kasbon.map(async (item) => {
-                        Kasbon.findOne({
+                        const kasbonValue = await Kasbon.findOne({
                             where: {
                                 id_kasbon: item.id_kasbon
                             }
-                        }).then(async (value) => {
-                            await Kasbon.update({
-                                tenor: value.tenor - 1,
-                                pinjaman: value.pinjaman - value.angsuran_per_bulan,
-                            }, { where: { id_kasbon: item.id_kasbon } })
-
-                            await Karyawan.findOne({
-                                where: {
-                                    id_karyawan: value.id_karyawan
-                                }
-                            }).then(async (valueK) => {
-                                await Karyawan.update({
-                                    sisa_kasbon: valueK.sisa_kasbon - value.angsuran_per_bulan,
-                                }, { where: { id_karyawan: value.id_karyawan } })
-                            });
-                        }).catch(err => {
-                            res.status(500).send({ message: err.message });
                         });
+
+                        await Kasbon.update({
+                            tenor: kasbonValue.tenor - 1,
+                            pinjaman: kasbonValue.pinjaman - kasbonValue.angsuran_per_bulan,
+                        }, { where: { id_kasbon: item.id_kasbon } });
+
+                        const valueK = await Karyawan.findOne({
+                            where: {
+                                id_karyawan: kasbonValue.id_karyawan
+                            }
+                        });
+
+                        totalGaji = valueK.gaji_bulanan;
+                        idKaryawan = valueK.id_karyawan;
+
+                        await Karyawan.update({
+                            sisa_kasbon: valueK.sisa_kasbon - kasbonValue.angsuran_per_bulan,
+                        }, { where: { id_karyawan: kasbonValue.id_karyawan } });
+
                         const uuid = uuidv1();
+                        potongan = parseInt(potongan) + parseInt(item.nilai_transaksi);
                         await Pengeluaran.create({
                             id_transaksi: uuid,
                             nama_transaksi: req.body.nama_transaksi,
@@ -51,38 +61,47 @@ exports.addPengeluaran = async (req, res) => {
                             bukti_foto: 'bukti_foto',
                             id_kasbon: item.id_kasbon,
                             id_perumahan: req.body.id_perumahan
-                        })
-                    }));
+                        });
+                    })
+                );
+
+                const uuid = uuidv1();
+                await Gaji.create({
+                    id_gaji: uuid,
+                    id_karyawan: idKaryawan,
+                    tanggal_gaji: req.body.tanggal_transaksi,
+                    jumlah_gaji: parseInt(totalGaji) - parseInt(potongan),
+                    id_perumahan: req.body.id_perumahan
+                });
+
+                res.status(200).send({ message: "Pengeluaran dan Penggajian berhasil ditambah!.", createdPengeluarans });
+                return;
             }
-
-            res.status(200).send({ message: "Pengeluaran berhasil ditambah!." });
-            return;
-
         }
 
-        Pengeluaran.create({
-            id_transaksi: req.body.id_transaksi,
-            nama_transaksi: req.body.nama_transaksi,
+        const uuid = uuidv1();
+        await Pengeluaran_bulanan.create({
+            id_pengeluaran_bulanan: uuid,
+            nama_transaksi_pengeluaran_bulanan: req.body.nama_transaksi_pengeluaran_bulanan,
             id_kategori: req.body.id_kategori,
             kategori_transaksi: req.body.kategori_transaksi,
-            tanggal_transaksi: req.body.tanggal_transaksi,
-            nilai_transaksi: req.body.nilai_transaksi,
-            keterangan: req.body.keterangan,
+            tanggal_transaksi_pengeluaran_bulanan: req.body.tanggal_transaksi_pengeluaran_bulanan,
+            nilai_transaksi_pengeluaran_bulanan: req.body.nilai_transaksi_pengeluaran_bulanan,
+            keterangan_pengeluaran_bulanan: req.body.keterangan_pengeluaran_bulanan,
             // bukti_foto: req.file.filename,
-            bukti_foto: 'bukti_foto',
-            id_kasbon: req.body.id_kasbon,
+            bukti_foto_pengeluaran_bulanan: 'bukti_foto',
             id_perumahan: req.body.id_perumahan
-        })
-            .then(user => {
-                res.status(200).send({ message: "Pengeluaran berhasil ditambah!." });
-            })
-            .catch(err => {
-                res.status(500).send({ message: err.message });
-            });
+        });
 
+        res.status(200).send({ message: "Pengeluaran Bulanan berhasil ditambah!." });
 
-    });
+        // Rest of your code for other cases
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).send({ message: "An error occurred." });
+    }
 };
+
 
 exports.deletePengeluaran = (req, res) => {
     Pengeluaran.destroy({
@@ -118,7 +137,9 @@ exports.updatePengeluaran = (req, res) => {
 };
 
 
-exports.listPengeluaran = (req, res) => {
+exports.listPengeluaran = async (req, res) => {
+
+    try {
     let query = '';
     if (req.body.param == 1) {
         query = "SELECT * FROM tb_pengeluarans JOIN tb_ketegoris ON tb_pengeluarans.id_kategori = tb_ketegoris.id_kategori LEFT JOIN tb_kasbons ON tb_pengeluarans.id_kasbon = tb_kasbons.id_kasbon JOIN tb_perumahans ON tb_pengeluarans.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_pengeluarans.nama_transaksi ASC";
@@ -130,16 +151,40 @@ exports.listPengeluaran = (req, res) => {
         query = "SELECT * FROM tb_pengeluarans JOIN tb_ketegoris ON tb_pengeluarans.id_kategori = tb_ketegoris.id_kategori LEFT JOIN tb_kasbons ON tb_pengeluarans.id_kasbon = tb_kasbons.id_kasbon JOIN tb_perumahans ON tb_pengeluarans.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan AND tb_pengeluarans.nama_transaksi LIKE :nama_transaksi ORDER BY tb_pengeluarans.nama_transaksi ASC";
     }
 
-    db.sequelize.query(
+    const resultPengeluaranKasbon = await db.sequelize.query(
         query,
         {
             replacements: { id_perumahan: req.body.id_perumahan, nama_transaksi: '%' + req.body.nama_transaksi + '%' },
             type: db.sequelize.QueryTypes.SELECT
         }
-    ).then(result => {
-        res.status(200).json({ message: "Berhasil Get Data Pengeluaran.", data: result });
-    })
-        .catch(err => {
-            res.status(500).send({ message: err.message });
-        });
+    );
+
+    if (req.body.param == 1) {
+        queryBulanan = "SELECT * FROM tb_pengeluaran_bulanans JOIN tb_ketegoris ON tb_pengeluaran_bulanans.id_kategori = tb_ketegoris.id_kategori JOIN tb_perumahans ON tb_pengeluaran_bulanans.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_pengeluaran_bulanans.nama_transaksi_pengeluaran_bulanan ASC";
+    }
+
+    const resultPengeluaranBulanan = await db.sequelize.query(
+        queryBulanan,
+        {
+            replacements: { id_perumahan: req.body.id_perumahan, nama_transaksi: '%' + req.body.nama_transaksi + '%' },
+            type: db.sequelize.QueryTypes.SELECT
+        }
+    );
+
+    if (req.body.param == 1) {
+        queryGaji = "SELECT * FROM tb_gajis JOIN tb_manajemen_karyawans ON tb_gajis.id_karyawan = tb_manajemen_karyawans.id_karyawan JOIN tb_perumahans ON tb_gajis.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_gajis.tanggal_gaji ASC";
+    }
+    const resultPengeluaranGaji = await db.sequelize.query(
+        queryGaji,
+        {
+            replacements: { id_perumahan: req.body.id_perumahan },
+            type: db.sequelize.QueryTypes.SELECT
+        }
+    );
+    
+    res.status(200).json({ message: "Berhasil Get Data Pengeluaran.", resultPengeluaranKasbon,resultPengeluaranBulanan,resultPengeluaranGaji });
+    
+    }catch(err){
+        res.status(500).send({ message: err.message });
+    }
 };

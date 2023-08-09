@@ -117,6 +117,38 @@ db.admin.belongsTo(db.role, {
   targetKey: 'id',
 });
 
+db.gaji.belongsTo(db.manajemenKaryawan,{
+   foreignKey: 'id_karyawan',
+  as: 'gaji_karyawan',
+  targetKey: 'id_karyawan',
+})
+
+
+db.gaji.belongsTo(db.perumahan,{
+  foreignKey: 'id_perumahan',
+ as: 'gaji_id_perumahan',
+ targetKey: 'id_perumahan',
+})
+
+
+
+db.tarik_tunai.belongsTo(db.perumahan,{
+  foreignKey: 'id_perumahan',
+ as: 'gaji_id_perumahan',
+ targetKey: 'id_perumahan',
+})
+
+db.pengeluaran_bulanan.belongsTo(db.perumahan,{
+  foreignKey: 'id_perumahan',
+ as: 'gaji_id_perumahan',
+ targetKey: 'id_perumahan',
+})
+
+db.pengeluaran_bulanan.belongsTo(db.kategori,{
+  foreignKey: 'id_kategori',
+ as: 'gaji_id_kategori',
+ targetKey: 'id_kategori',
+})
 
 
 // db.sequelize.sync();
@@ -125,9 +157,9 @@ db.admin.belongsTo(db.role, {
 // console.log('Drop and Resync Database with { force: true }');
 // });
 
-// db.sequelize.sync({force: true}).then(() => {
-//   console.log('Drop and Resync Database with { force: true }');
-//   });
+db.sequelize.sync({alter: true}).then(() => {
+  console.log('Drop and Resync Database with { force: true }');
+  });
 
 // simple route
 app.get("/", (req, res) => {

@@ -10,6 +10,7 @@ const RW = db.rw
 const PENGURUS = db.pengurus
 const PERUMAHAN = db.perumahan
 const ADMIN = db.admin
+const TARIKTUNAI = db.tarik_tunai
 
 var bcrypt = require("bcryptjs");
 
@@ -314,6 +315,40 @@ checkDataAdmin = (req, res, next) => {
     });
 };
 
+// tarik tunai
+
+checkDuplicateTarikTunai = (req, res, next) => {
+    TARIKTUNAI.findOne({
+        where: {
+            id_tarik_tunai: req.body.id_tarik_tunai
+        }
+    }).then(user => {
+        if (user) {
+            res.status(400).send({
+                message: "Failed! Tarik Tunai is already in database!"
+            });
+            return;
+        }
+        next();
+    });
+};
+
+checkDataTarikTunai = (req, res, next) => {
+    TARIKTUNAI.findOne({
+        where: {
+            id_tarik_tunai: req.body.id_tarik_tunai
+        }
+    }).then(user => {
+        if (!user) {
+            res.status(400).send({
+                message: "Failed! Data tidak ada dalam database!"
+            });
+            return;
+        }
+        next();
+    });
+};
+
 const verifyAdd = {
     verifyRole: checkDuplicateRole,
     verifyKategori: checkDuplicateKategori,
@@ -331,7 +366,9 @@ const verifyAdd = {
     checkDataRW: checkDataRW,
     checkDataPengurus: checkDataPengurus,
     checkDataPerumahan: checkDataPerumahan,
-    checkDataAdmin: checkDataAdmin
+    checkDataAdmin: checkDataAdmin,
+    checkDataTarikTunai: checkDataTarikTunai,
+    verifyTarikTunai: checkDuplicateTarikTunai,
 };
 
 module.exports = verifyAdd;

@@ -10,6 +10,7 @@ const controllerRW = require("../controllers/rw.controller");
 const controllerPengurus = require("../controllers/pengurus.controller");
 const controllerPerumahan = require("../controllers/perumahan.controller");
 const controllerAdmin = require("../controllers/auth.controller");
+const controllerTarikTunai = require("../controllers/tarikTunai.controller");
 
 const middleware = require("../middleware");
 const multer = require('multer')
@@ -343,5 +344,32 @@ module.exports = function (app) {
     )
 
     // end
+
+
+    // tarik tunai
+    app.post(
+        "/api/admin/insert/tarik_tunai",
+        [authJwt.verifyToken, middleware.verifyAdd.verifyTarikTunai],
+        controllerTarikTunai.addTarikTunai
+    )
+
+    app.post(
+        "/api/admin/delete/tarik_tunai",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataTarikTunai],
+        controllerTarikTunai.deleteTarikTunai
+    )
+
+    app.post(
+        "/api/admin/update/tarik_tunai",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataTarikTunai],
+        controllerTarikTunai.updateTarikTunai
+    )
+
+    app.post(
+        "/api/admin/list/tarik_tunai",
+        [authJwt.verifyToken],
+        controllerTarikTunai.listTarikTunai
+    )
+
 
 };

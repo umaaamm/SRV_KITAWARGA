@@ -40,6 +40,9 @@ module.exports = (sequelize, Sequelize) => {
       jenis_kelamin: {
         type: Sequelize.STRING
       },
+      biaya_ipl:{
+        type: Sequelize.DECIMAL
+      },
     });
   
     return DaftarWarga;

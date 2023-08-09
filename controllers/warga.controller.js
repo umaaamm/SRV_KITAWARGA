@@ -16,6 +16,7 @@ exports.addWarga = (req, res) => {
         id_perumahan: req.body.id_perumahan,
         status_pernikahan: req.body.status_pernikahan,
         jenis_kelamin: req.body.jenis_kelamin,
+        biaya_ipl: req.body.biaya_ipl
     })
         .then(user => {
             res.status(200).send({ message: "Warga berhasil ditambah!." });
@@ -53,6 +54,7 @@ exports.updateWarga = (req, res) => {
         id_perumahan: req.body.id_perumahan,
         status_pernikahan: req.body.status_pernikahan,
         jenis_kelamin: req.body.jenis_kelamin,
+        biaya_ipl: req.body.biaya_ipl
     }, { where: { id_warga: req.body.id_warga } })
         .then(user => {
             res.status(200).send({ message: "Warga berhasil diperbaharui!." });
