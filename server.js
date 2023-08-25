@@ -25,6 +25,8 @@ db.manajemenKaryawan.hasMany(db.kasbon, {
   as: 'karyawan',
   sourceKey: 'id_karyawan',
 });
+
+//tidak dipake
 // db.kasbon.belongsTo(db.manajemenKaryawan, {
 //   foreignKey: 'id_karyawan',
 //   as: 'kasbon',
@@ -153,7 +155,7 @@ db.pengeluaran_bulanan.belongsTo(db.kategori,{
 
 // db.sequelize.sync();
 // force: true will drop the table if it already exists
-// db.sequelize.sync({force: false}).then(() => {
+// db.sequelize.sync({force: true}).then(() => {
 // console.log('Drop and Resync Database with { force: true }');
 // });
 
