@@ -11,6 +11,7 @@ const controllerPengurus = require("../controllers/pengurus.controller");
 const controllerPerumahan = require("../controllers/perumahan.controller");
 const controllerAdmin = require("../controllers/auth.controller");
 const controllerTarikTunai = require("../controllers/tarikTunai.controller");
+const controllerPemasukan = require("../controllers/pemasukan.controller");
 
 const middleware = require("../middleware");
 const multer = require('multer')
@@ -371,5 +372,16 @@ module.exports = function (app) {
         controllerTarikTunai.listTarikTunai
     )
 
+    //pemasukan
+    app.post(
+        "/api/admin/insert/pemasukan_webhook",
+        controllerPemasukan.addPemasukan
+    )
+
+    app.post(
+        "/api/admin/list/pemasukan",
+        [authJwt.verifyToken],
+        controllerPemasukan.listPemasukan
+    )
 
 };
