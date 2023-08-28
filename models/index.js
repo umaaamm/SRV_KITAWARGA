@@ -10,7 +10,10 @@ const sequelize = new Sequelize(
     dialect: config.dialect,
     operatorsAliases: 0,
     port: 25060,
-    ssl: true,
+    ssl: {
+       rejectUnauthorized: true,
+       ca: process.env.CA_CERT,
+    },
     pool: {
       max: config.pool.max,
       min: config.pool.min,
