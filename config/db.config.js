@@ -15,6 +15,7 @@
 module.exports = {
     HOST: "db-postgresql-sgp1-57048-do-user-14579204-0.b.db.ondigitalocean.com",
     USER: "doadmin",
+    port: '25060',
     PASSWORD: "AVNS_N-dYrq_naXbjoya1FjE",
     DB: "kitawarga",
     dialect: "postgres",
