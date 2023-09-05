@@ -17,8 +17,9 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/api/', createProxyMiddleware({ target: `http://kitawarga.com:${port}`, changeOrigin: true }));
-
+app.get('/api/', (req, res) => {
+  res.redirect(`http://kitawarga.com:3000`);
+});
 // database
 const db = require("./models");
 
