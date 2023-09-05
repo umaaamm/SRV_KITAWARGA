@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
 
@@ -16,14 +17,7 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/api/', (req, res, next) => {
-  // Forward the request to your Node.js application on port 3000
-  // const httpProxy = require('http-proxy');
-  // const proxy = httpProxy.createProxyServer({});
-  // proxy.web(req, res, { target: `http://kitawarga.com:3000` });
-  req.url = req.url.replace(/^\/api/, '/');
-  next();
-});
+app.use('/api/', createProxyMiddleware({ target: `http://kitawarga.com:${port}`, changeOrigin: true }));
 
 // database
 const db = require("./models");
