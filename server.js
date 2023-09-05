@@ -16,6 +16,13 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use('/api/', (req, res) => {
+  // Forward the request to your Node.js application on port 3000
+  const httpProxy = require('http-proxy');
+  const proxy = httpProxy.createProxyServer({});
+  proxy.web(req, res, { target: `http://kitawarga.com:3000` });
+});
+
 // database
 const db = require("./models");
 
@@ -174,7 +181,7 @@ require('./routes/user.routes')(app);
 require('./routes/admin.routes')(app);
 
 // set port, listen for requests
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
