@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/api/', (req, res) => {
+app.use('/api/', (req, res, next) => {
   // Forward the request to your Node.js application on port 3000
   // const httpProxy = require('http-proxy');
   // const proxy = httpProxy.createProxyServer({});
