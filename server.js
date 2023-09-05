@@ -16,9 +16,6 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/api/', (req, res) => {
-  res.redirect(`http://kitawarga.com:3000`);
-});
 // database
 const db = require("./models");
 
