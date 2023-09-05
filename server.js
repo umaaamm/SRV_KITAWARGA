@@ -18,9 +18,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api/', (req, res) => {
   // Forward the request to your Node.js application on port 3000
-  const httpProxy = require('http-proxy');
-  const proxy = httpProxy.createProxyServer({});
-  proxy.web(req, res, { target: `http://kitawarga.com:3000` });
+  // const httpProxy = require('http-proxy');
+  // const proxy = httpProxy.createProxyServer({});
+  // proxy.web(req, res, { target: `http://kitawarga.com:3000` });
+  req.url = req.url.replace(/^\/api/, '/');
+  next();
 });
 
 // database
