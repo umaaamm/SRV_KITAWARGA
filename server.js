@@ -249,6 +249,6 @@ const options = {
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;
-https.createServer(options, app).listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
