@@ -1,11 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-
+const fs = require("fs");
 const app = express();
+const https = require("https");
 
 var corsOptions = {
-  origin: ["http://web.kitawarga.com","http://localhost:3000"]
+  origin: ["http://web.kitawarga.com", "http://localhost:3000"]
 };
 
 app.use(cors(corsOptions));
@@ -119,49 +120,116 @@ db.admin.belongsTo(db.role, {
   targetKey: 'id',
 });
 
-db.gaji.belongsTo(db.manajemenKaryawan,{
-   foreignKey: 'id_karyawan',
+db.gaji.belongsTo(db.manajemenKaryawan, {
+  foreignKey: 'id_karyawan',
   as: 'gaji_karyawan',
   targetKey: 'id_karyawan',
 })
 
 
-db.gaji.belongsTo(db.perumahan,{
+db.gaji.belongsTo(db.perumahan, {
   foreignKey: 'id_perumahan',
- as: 'gaji_id_perumahan',
- targetKey: 'id_perumahan',
+  as: 'gaji_id_perumahan',
+  targetKey: 'id_perumahan',
 })
 
 
 
-db.tarik_tunai.belongsTo(db.perumahan,{
+db.tarik_tunai.belongsTo(db.perumahan, {
   foreignKey: 'id_perumahan',
- as: 'gaji_id_perumahan',
- targetKey: 'id_perumahan',
+  as: 'gaji_id_perumahan',
+  targetKey: 'id_perumahan',
 })
 
-db.pengeluaran_bulanan.belongsTo(db.perumahan,{
+db.pengeluaran_bulanan.belongsTo(db.perumahan, {
   foreignKey: 'id_perumahan',
- as: 'gaji_id_perumahan',
- targetKey: 'id_perumahan',
+  as: 'gaji_id_perumahan',
+  targetKey: 'id_perumahan',
 })
 
-db.pengeluaran_bulanan.belongsTo(db.kategori,{
+db.pengeluaran_bulanan.belongsTo(db.kategori, {
   foreignKey: 'id_kategori',
- as: 'gaji_id_kategori',
- targetKey: 'id_kategori',
+  as: 'gaji_id_kategori',
+  targetKey: 'id_kategori',
 })
 
 
-// db.sequelize.sync();
-// // force: true will drop the table if it already exists
-// db.sequelize.sync({force: true}).then(() => {
-// console.log('Drop and Resync Database with { force: true }');
-// });
+/**
 
-db.sequelize.sync({alter: true}).then(() => {
-  console.log('alter and Resync Database with { alter: true }');
-  });
+db.sequelize.sync();
+// force: true will drop the table if it already exists
+db.sequelize.sync({force: true}).then(() => {
+console.log('Drop and Resync Database with { force: true }');
+
+db.role.create({
+  id: '2c452346-3429-11ee-be56-0242ac120002',
+  name: 'Admin',
+  kode_role: '2c452346-3429-11ee-be56-0242ac120002',
+});
+
+db.perumahan.create({
+  id_perumahan: '4872a5d0-3428-11ee-be56-0242ac120002',
+  nama_perumahan: 'Perum Sedder',
+  alamat_perumahan: 'Alamat Seeder',
+  saldo_perumahan: '100000',
+  link_cctv: 'link seeder',
+  link_img_qr: 'link seeder',
+  alamat_maps: 'alamat seeder'
+})
+
+db.rw.create({
+  id_rw: '381a8afe-3428-11ee-be56-0242ac120002',
+  nomor_rw: '02',
+  id_perumahan: '4872a5d0-3428-11ee-be56-0242ac120002',
+})
+
+db.rt.create({
+  id_rt: '8c398a4a-3428-11ee-be56-0242ac120002',
+  nomor_rt: '05',
+  id_perumahan: '4872a5d0-3428-11ee-be56-0242ac120002',
+  id_rw: '381a8afe-3428-11ee-be56-0242ac120002'
+})
+
+db.daftarWarga.create({
+  id_warga: '956d1ad0-0946-11ee-be56-0242ac120002',
+  nama_warga: 'Sedder Name',
+  blok_rumah: 'V',
+  nomor_rumah: '02',
+  email: 'umam.tekno@gmail.com',
+  nomor_hp: '081290766692',
+  is_rw: false,
+  is_rt: true,
+  id_rt: '8c398a4a-3428-11ee-be56-0242ac120002',
+  id_rw: '381a8afe-3428-11ee-be56-0242ac120002',
+  id_perumahan: '4872a5d0-3428-11ee-be56-0242ac120002',
+  status_pernikahan: 'Lajang',
+  jenis_kelamin:'Laki-Laki',
+  biaya_ipl: '100000'
+})
+
+db.pengurus.create({
+  id_pengurus: '51c4bf36-0946-11ee-be56-0242ac120002',
+  id_warga: '956d1ad0-0946-11ee-be56-0242ac120002',
+  id_perumahan: '4872a5d0-3428-11ee-be56-0242ac120002',
+})
+
+db.admin.create({
+  username_admin: 'admin',
+    email_admin: 'admin@gmail.com',
+    password_admin: bcrypt.hashSync('admin', 8),
+    no_hp_admin: '081290766692',
+    nama_admin: 'Admin Seeder',
+    role: '2c452346-3429-11ee-be56-0242ac120002',
+    id_pengurus: '51c4bf36-0946-11ee-be56-0242ac120002'
+})
+
+ });
+
+  */
+
+// db.sequelize.sync({ alter: true }).then(() => {
+//   console.log('alter and Resync Database with { alter: true }');
+// });
 
 // simple route
 app.get("/", (req, res) => {
@@ -173,8 +241,14 @@ require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
 require('./routes/admin.routes')(app);
 
+const options = {
+  key: fs.readFileSync("certs/kitawarga.com.key"),                  //Change Private Key Path here
+  cert: fs.readFileSync("certs/sectigo_kitawarga.com_crt.crt"),            //Change Main Certificate Path here
+  ca: fs.readFileSync('certs/sectigo_kitawarga.com_intermediate.crt.crt'),             //Change Intermediate Certificate Path here
+  };
+
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+https.createServer(options, app).listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
