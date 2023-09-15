@@ -134,6 +134,11 @@ module.exports = function (app) {
         controllerPengeluaran.listPengeluaran
     )
 
+    app.post(
+        "/api/admin/list/pengeluaran_webview",
+        controllerPengeluaran.listPengeluaran
+    )
+
     // end Pengeluaran
 
     // karyawan
