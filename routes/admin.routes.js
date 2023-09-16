@@ -135,6 +135,24 @@ module.exports = function (app) {
     )
 
     app.post(
+        "/api/admin/list/pengeluaran_gaji",
+        [authJwt.verifyToken],
+        controllerPengeluaran.listPengeluaranGaji
+    )
+
+    app.post(
+        "/api/admin/list/pengeluaran_bulanan",
+        [authJwt.verifyToken],
+        controllerPengeluaran.listPengeluaranBulanan
+    )
+
+    app.post(
+        "/api/admin/list/pengeluaran_kasbon",
+        [authJwt.verifyToken],
+        controllerPengeluaran.listPengeluaranKasbon
+    )
+
+    app.post(
         "/api/admin/list/pengeluaran_webview",
         controllerPengeluaran.listPengeluaran
     )
