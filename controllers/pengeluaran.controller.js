@@ -120,6 +120,7 @@ exports.addPengeluaran = async (req, res) => {
                 }, { where: { id_perumahan: req.body.id_perumahan } });
 
                 res.status(200).send({ message: "Penggajian berhasil ditambah!." });
+                return;
         }
 
         const uuid = uuidv1();
