@@ -17,7 +17,7 @@ exports.addPengeluaran = async (req, res) => {
             }
         });
 
-        if (kategori.nama_kategori_transaksi == "Gaji") {
+        if (kategori.nama_kategori_transaksi == "Gaji dan Kasbon") {
             var totalGaji = 0;
             var potongan = 0;
             var idKaryawan = '';
@@ -88,8 +88,11 @@ exports.addPengeluaran = async (req, res) => {
 
                 res.status(200).send({ message: "Pengeluaran dan Penggajian berhasil ditambah!.", createdPengeluarans });
                 return;
-            } else {
-                const uuid = uuidv1();
+            }
+        }
+
+        if (kategori.nama_kategori_transaksi == "Gaji") {
+            const uuid = uuidv1();
 
                 const valueK = await Karyawan.findOne({
                     where: {
@@ -117,8 +120,6 @@ exports.addPengeluaran = async (req, res) => {
                 }, { where: { id_perumahan: req.body.id_perumahan } });
 
                 res.status(200).send({ message: "Penggajian berhasil ditambah!." });
-
-            }
         }
 
         const uuid = uuidv1();
