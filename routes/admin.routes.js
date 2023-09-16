@@ -418,4 +418,9 @@ module.exports = function (app) {
         controllerPemasukan.listPemasukan
     )
 
+    app.post(
+        "/api/admin/list/pemasukan_webview",
+        controllerPemasukan.listPemasukan
+    )
+
 };
