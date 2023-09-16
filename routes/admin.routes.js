@@ -408,6 +408,11 @@ module.exports = function (app) {
     )
 
     app.post(
+        "/api/admin/insert/pemasukan_webhook_va",
+        controllerPemasukan.addPemasukanVA
+    )
+
+    app.post(
         "/api/admin/list/pemasukan",
         [authJwt.verifyToken],
         controllerPemasukan.listPemasukan

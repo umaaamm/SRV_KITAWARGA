@@ -19,6 +19,23 @@ exports.addPemasukan = (req, res) => {
 };
 
 
+exports.addPemasukanVA = (req, res) => {
+    Pemasukan.create({
+        id_transaksi: req.body.id,
+        id_warga: '956d1ad0-0946-11ee-be56-0242ac120002',
+        nama_pembayar: 'Mahmud',
+        nomor_rumah: '23',
+        tanggal_transaksi: Math.floor(new Date().getTime() / 1000),
+        nilai_transaksi: req.body.amount,
+    })
+        .then(user => {
+            res.status(200).send({ message: "Pemasukan VA berhasil ditambah!." });
+        })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+};
+
 
 exports.listPemasukan = (req, res) => {
     db.sequelize.query(
