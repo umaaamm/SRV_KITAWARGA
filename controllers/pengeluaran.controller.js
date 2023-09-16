@@ -236,3 +236,31 @@ exports.listPengeluaranBulanan = async (req, res) => {
             res.status(500).send({ message: err.message });
         });
 }
+
+exports.listPengeluaranMobile = async (req, res) => {
+    let query = '';
+    if (req.body.param == 1) {
+        query ="SELECT * FROM tb_pengeluaran_bulanans JOIN tb_ketegoris ON tb_pengeluaran_bulanans.id_kategori = tb_ketegoris.id_kategori JOIN tb_perumahans ON tb_pengeluaran_bulanans.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_pengeluaran_bulanans.tanggal_transaksi_pengeluaran_bulanan ASC";
+    }
+
+    if (req.body.param == 2) {
+        query = "SELECT * FROM tb_pengeluarans JOIN tb_ketegoris ON tb_pengeluarans.id_kategori = tb_ketegoris.id_kategori LEFT JOIN tb_kasbons ON tb_pengeluarans.id_kasbon = tb_kasbons.id_kasbon JOIN tb_perumahans ON tb_pengeluarans.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_pengeluarans.tanggal_transaksi ASC"
+    }
+
+    if (req.body.param == 3) {
+        query = "SELECT * FROM tb_gajis JOIN tb_manajemen_karyawans ON tb_gajis.id_karyawan = tb_manajemen_karyawans.id_karyawan JOIN tb_perumahans ON tb_gajis.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_gajis.tanggal_gaji ASC"
+    }
+
+    db.sequelize.query(
+        query,
+        {
+            replacements: { id_perumahan: req.body.id_perumahan },
+            type: db.sequelize.QueryTypes.SELECT
+        }
+    ).then(result => {
+        res.status(200).json({ message: "Berhasil Get Data Pengeluaran Mobile.", data: result });
+    })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+}

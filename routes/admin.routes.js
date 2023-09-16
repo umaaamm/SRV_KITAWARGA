@@ -153,6 +153,12 @@ module.exports = function (app) {
     )
 
     app.post(
+        "/api/admin/list/pengeluaran_mobile",
+        [authJwt.verifyToken],
+        controllerPengeluaran.listPengeluaranMobile
+    )
+
+    app.post(
         "/api/admin/list/pengeluaran_webview",
         controllerPengeluaran.listPengeluaran
     )
