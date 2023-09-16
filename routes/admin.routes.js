@@ -252,7 +252,7 @@ module.exports = function (app) {
     )
 
 
-    app.get(
+    app.post(
         "/api/admin/mock/data",
         [authJwt.verifyToken],
         controllerKaryawan.mockData
