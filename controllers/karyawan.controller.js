@@ -1,5 +1,6 @@
 const db = require("../models");
 const Karyawan = db.manajemenKaryawan;
+const Perumahan = db.perumahan;
 
 exports.addKaryawan = (req, res) => {
     Karyawan.create({
@@ -50,13 +51,35 @@ exports.updateKaryawan = (req, res) => {
 
 // mock
 
-exports.mockData = (req, res) => {
+exports.mockData = async (req, res) => {
+
+    const PerumahanData = await Perumahan.findOne({
+        where: {
+            id_perumahan: req.body.id_perumahan
+        }
+    });
+
+    const dataPemasukan  = await db.sequelize.query(
+        "select sum(nilai_transaksi) as nilai_transaksi from tb_pemasukans join tb_daftar_wargas on tb_pemasukans.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan",
+        {
+            replacements: { id_perumahan: req.body.id_perumahan},
+            type: db.sequelize.QueryTypes.SELECT
+        }
+    )
+
+    const dataPengeluaran  = await db.sequelize.query(
+        "select sum(nilai_transaksi) as nilai_transaksi from tb_pengeluarans where tb_pengeluarans.id_perumahan = :id_perumahan",
+        {
+            replacements: { id_perumahan: req.body.id_perumahan},
+            type: db.sequelize.QueryTypes.SELECT
+        }
+    )
 
     let data = {
-        "total_saldo": "2000000",
-        "total_pemasukan_bulan_ini": "4000000",
-        "total_pengeluaran_bulan_ini": "1000000",
-        "selisih": "300000",
+        "total_saldo": PerumahanData.saldo_perumahan,
+        "total_pemasukan_bulan_ini": dataPemasukan.nilai_transaksi,
+        "total_pengeluaran_bulan_ini": dataPengeluaran.nilai_transaksi,
+        "selisih": dataPemasukan.nilai_transaksi - dataPengeluaran.nilai_transaksi,
     }
 
     res.status(200).json({ message: "Berhasil Get Data Summary.", data: data });
