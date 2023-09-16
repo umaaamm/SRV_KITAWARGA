@@ -60,7 +60,7 @@ exports.addPemasukanVA = (req, res) => {
 
 exports.listPemasukan = (req, res) => {
     db.sequelize.query(
-        "SELECT * FROM tb_pemasukans",
+        "SELECT * FROM tb_pemasukans ORDER BY tb_pemasukans.tanggal_transaksi ASC",
         {
             type: db.sequelize.QueryTypes.SELECT
         }
