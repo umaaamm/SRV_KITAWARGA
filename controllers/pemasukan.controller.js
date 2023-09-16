@@ -1,5 +1,6 @@
 const db = require("../models");
 const Pemasukan = db.pemasukan;
+const Perumahan = db.perumahan;
 
 exports.addPemasukan = (req, res) => {
     Pemasukan.create({
@@ -10,7 +11,17 @@ exports.addPemasukan = (req, res) => {
         tanggal_transaksi: Math.floor(new Date().getTime() / 1000),
         nilai_transaksi: req.body.data.amount,
     })
-        .then(user => {
+        .then(async(user) => {
+            const PerumahanData = await Perumahan.findOne({
+                where: {
+                    id_perumahan: '4872a5d0-3428-11ee-be56-0242ac120002'
+                }
+            });
+
+            await Perumahan.update({
+                saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) - (parseInt(req.body.data.amount)),
+            }, { where: { id_perumahan: '4872a5d0-3428-11ee-be56-0242ac120002' } });
+
             res.status(200).send({ message: "Pemasukan berhasil ditambah!." });
         })
         .catch(err => {
@@ -28,7 +39,17 @@ exports.addPemasukanVA = (req, res) => {
         tanggal_transaksi: Math.floor(new Date().getTime() / 1000),
         nilai_transaksi: req.body.amount,
     })
-        .then(user => {
+        .then(async(user) => {
+            const PerumahanData = await Perumahan.findOne({
+                where: {
+                    id_perumahan: '4872a5d0-3428-11ee-be56-0242ac120002'
+                }
+            });
+
+            await Perumahan.update({
+                saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) - (parseInt(req.body.amount)),
+            }, { where: { id_perumahan: '4872a5d0-3428-11ee-be56-0242ac120002' } });
+
             res.status(200).send({ message: "Pemasukan VA berhasil ditambah!." });
         })
         .catch(err => {
