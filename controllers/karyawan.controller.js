@@ -80,7 +80,7 @@ exports.mockData = async (req, res) => {
         "total_saldo": PerumahanData.saldo_perumahan,
         "total_pemasukan_bulan_ini": dataPemasukan[0].nilai_transaksi,
         "total_pengeluaran_bulan_ini": dataPengeluaran[0].nilai_transaksi,
-        "selisih": dataPemasukan[0].nilai_transaksi - dataPengeluaran[0].nilai_transaksi,
+        "selisih": `${dataPemasukan[0].nilai_transaksi - dataPengeluaran[0].nilai_transaksi}`,
     }
 
     res.status(200).json({ message: "Berhasil Get Data Summary.", data: data });
