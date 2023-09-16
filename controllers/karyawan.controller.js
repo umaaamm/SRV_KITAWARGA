@@ -67,6 +67,8 @@ exports.mockData = async (req, res) => {
         }
     )
 
+    console.log('dataPemasukan', dataPemasukan);
+
     const dataPengeluaran  = await db.sequelize.query(
         "select sum(nilai_transaksi) as nilai_transaksi from tb_pengeluarans where tb_pengeluarans.id_perumahan = :id_perumahan",
         {
@@ -74,6 +76,9 @@ exports.mockData = async (req, res) => {
             type: db.sequelize.QueryTypes.SELECT
         }
     )
+
+    console.log('dataPengeluaran', dataPengeluaran);
+
 
     let data = {
         "total_saldo": PerumahanData.saldo_perumahan,
