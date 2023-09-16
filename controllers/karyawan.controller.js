@@ -67,8 +67,6 @@ exports.mockData = async (req, res) => {
         }
     )
 
-    console.log('dataPemasukan', dataPemasukan);
-
     const dataPengeluaran  = await db.sequelize.query(
         "select sum(nilai_transaksi) as nilai_transaksi from tb_pengeluarans where tb_pengeluarans.id_perumahan = :id_perumahan",
         {
@@ -77,14 +75,12 @@ exports.mockData = async (req, res) => {
         }
     )
 
-    console.log('dataPengeluaran', dataPengeluaran);
-
 
     let data = {
         "total_saldo": PerumahanData.saldo_perumahan,
-        "total_pemasukan_bulan_ini": dataPemasukan.nilai_transaksi,
-        "total_pengeluaran_bulan_ini": dataPengeluaran.nilai_transaksi,
-        "selisih": dataPemasukan.nilai_transaksi - dataPengeluaran.nilai_transaksi,
+        "total_pemasukan_bulan_ini": dataPemasukan[0].nilai_transaksi,
+        "total_pengeluaran_bulan_ini": dataPengeluaran[0].nilai_transaksi,
+        "selisih": dataPemasukan[0].nilai_transaksi - dataPengeluaran[0].nilai_transaksi,
     }
 
     res.status(200).json({ message: "Berhasil Get Data Summary.", data: data });
