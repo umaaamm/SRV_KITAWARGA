@@ -4,6 +4,8 @@ const Karyawan = db.manajemenKaryawan;
 const Kasbon = db.kasbon;
 const Kategori = db.kategori;
 const Gaji = db.gaji;
+const Perumahan = db.perumahan;
+
 const Pengeluaran_bulanan = db.pengeluaran_bulanan;
 const { v1: uuidv1 } = require('uuid');
 
@@ -74,6 +76,16 @@ exports.addPengeluaran = async (req, res) => {
                     id_perumahan: req.body.id_perumahan
                 });
 
+                const PerumahanData = await Perumahan.findOne({
+                    where: {
+                        id_perumahan: req.body.id_perumahan
+                    }
+                });
+
+                await Perumahan.update({
+                    saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) - (parseInt(totalGaji) - parseInt(potongan)),
+                }, { where: { id_perumahan: req.body.id_perumahan } });
+
                 res.status(200).send({ message: "Pengeluaran dan Penggajian berhasil ditambah!.", createdPengeluarans });
                 return;
             }
@@ -92,6 +104,16 @@ exports.addPengeluaran = async (req, res) => {
             bukti_foto_pengeluaran_bulanan: 'bukti_foto',
             id_perumahan: req.body.id_perumahan
         });
+
+        const PerumahanData = await Perumahan.findOne({
+            where: {
+                id_perumahan: req.body.id_perumahan
+            }
+        });
+
+        await Perumahan.update({
+            saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) - parseInt(req.body.nilai_transaksi_pengeluaran_bulanan),
+        }, { where: { id_perumahan: req.body.id_perumahan } });
 
         res.status(200).send({ message: "Pengeluaran Bulanan berhasil ditambah!." });
 
@@ -240,7 +262,7 @@ exports.listPengeluaranBulanan = async (req, res) => {
 exports.listPengeluaranMobile = async (req, res) => {
     let query = '';
     if (req.body.param == 1) {
-        query ="SELECT * FROM tb_pengeluaran_bulanans JOIN tb_ketegoris ON tb_pengeluaran_bulanans.id_kategori = tb_ketegoris.id_kategori JOIN tb_perumahans ON tb_pengeluaran_bulanans.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_pengeluaran_bulanans.tanggal_transaksi_pengeluaran_bulanan ASC";
+        query = "SELECT * FROM tb_pengeluaran_bulanans JOIN tb_ketegoris ON tb_pengeluaran_bulanans.id_kategori = tb_ketegoris.id_kategori JOIN tb_perumahans ON tb_pengeluaran_bulanans.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_pengeluaran_bulanans.tanggal_transaksi_pengeluaran_bulanan ASC";
     }
 
     if (req.body.param == 2) {
