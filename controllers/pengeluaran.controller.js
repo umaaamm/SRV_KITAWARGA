@@ -88,6 +88,36 @@ exports.addPengeluaran = async (req, res) => {
 
                 res.status(200).send({ message: "Pengeluaran dan Penggajian berhasil ditambah!.", createdPengeluarans });
                 return;
+            } else {
+                const uuid = uuidv1();
+
+                const valueK = await Karyawan.findOne({
+                    where: {
+                        id_karyawan: req.body.id_karyawan
+                    }
+                });
+
+                totalGaji = valueK.gaji_bulanan;
+                await Gaji.create({
+                    id_gaji: uuid,
+                    id_karyawan: req.body.id_karyawan,
+                    tanggal_gaji: req.body.tanggal_transaksi,
+                    jumlah_gaji: totalGaji,
+                    id_perumahan: req.body.id_perumahan
+                });
+
+                const PerumahanData = await Perumahan.findOne({
+                    where: {
+                        id_perumahan: req.body.id_perumahan
+                    }
+                });
+
+                await Perumahan.update({
+                    saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) - parseInt(totalGaji),
+                }, { where: { id_perumahan: req.body.id_perumahan } });
+
+                res.status(200).send({ message: "Penggajian berhasil ditambah!." });
+
             }
         }
 
