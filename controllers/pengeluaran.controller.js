@@ -17,6 +17,8 @@ exports.addPengeluaran = async (req, res) => {
             }
         });
 
+        console.log('ffdfdf',kategori );
+
         if (kategori.nama_kategori_transaksi == "Gaji dan Kasbon") {
             var totalGaji = 0;
             var potongan = 0;
