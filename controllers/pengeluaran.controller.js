@@ -92,6 +92,7 @@ exports.addPengeluaran = async (req, res) => {
         }
 
         if (kategori.nama_kategori_transaksi == "Gaji") {
+            console.log('mlmlml', req.body.id_karyawan);
             const uuid = uuidv1();
 
                 const valueK = await Karyawan.findOne({
