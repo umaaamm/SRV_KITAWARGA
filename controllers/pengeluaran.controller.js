@@ -17,8 +17,6 @@ exports.addPengeluaran = async (req, res) => {
             }
         });
 
-        console.log('ffdfdf',kategori );
-
         if (kategori.nama_kategori_transaksi == "Gaji dan Kasbon") {
             var totalGaji = 0;
             var potongan = 0;
@@ -250,7 +248,7 @@ exports.listPengeluaran = async (req, res) => {
 
 exports.listPengeluaranGaji = async (req, res) => {
     db.sequelize.query(
-        "SELECT * FROM tb_gajis JOIN tb_manajemen_karyawans ON tb_gajis.id_karyawan = tb_manajemen_karyawans.id_karyawan JOIN tb_perumahans ON tb_gajis.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_gajis.tanggal_gaji ASC",
+        "SELECT * FROM tb_gajis JOIN tb_manajemen_karyawans ON tb_gajis.id_karyawan = tb_manajemen_karyawans.id_karyawan JOIN tb_perumahans ON tb_gajis.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_gajis.tanggal_gaji DESC",
         {
             replacements: { id_perumahan: req.body.id_perumahan },
             type: db.sequelize.QueryTypes.SELECT
@@ -281,7 +279,7 @@ exports.listPengeluaranKasbon = async (req, res) => {
 
 exports.listPengeluaranBulanan = async (req, res) => {
     db.sequelize.query(
-        "SELECT * FROM tb_pengeluaran_bulanans JOIN tb_ketegoris ON tb_pengeluaran_bulanans.id_kategori = tb_ketegoris.id_kategori JOIN tb_perumahans ON tb_pengeluaran_bulanans.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_pengeluaran_bulanans.tanggal_transaksi_pengeluaran_bulanan ASC",
+        "SELECT * FROM tb_pengeluaran_bulanans JOIN tb_ketegoris ON tb_pengeluaran_bulanans.id_kategori = tb_ketegoris.id_kategori JOIN tb_perumahans ON tb_pengeluaran_bulanans.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_pengeluaran_bulanans.tanggal_transaksi_pengeluaran_bulanan DESC",
         {
             replacements: { id_perumahan: req.body.id_perumahan },
             type: db.sequelize.QueryTypes.SELECT
