@@ -59,16 +59,16 @@ exports.listKasbon = (req, res) => {
 
     let query = '';
     if (req.body.param == 1) {
-        query = "SELECT * FROM tb_kasbons JOIN tb_manajemen_karyawans ON tb_kasbons.id_karyawan = tb_manajemen_karyawans.id_karyawan JOIN tb_perumahans ON tb_manajemen_karyawans.id_perumahan =  tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_manajemen_karyawans.nama_karyawan ASC";
+        query = "SELECT * FROM tb_kasbons JOIN tb_manajemen_karyawans ON tb_kasbons.id_karyawan = tb_manajemen_karyawans.id_karyawan JOIN tb_perumahans ON tb_manajemen_karyawans.id_perumahan =  tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan AND tb_kasbons.tenor != '0' ORDER BY tb_manajemen_karyawans.nama_karyawan ASC";
     }
     if (req.body.param == 2) {
-        query = "SELECT * FROM tb_kasbons JOIN tb_manajemen_karyawans ON tb_kasbons.id_karyawan = tb_manajemen_karyawans.id_karyawan JOIN tb_perumahans ON tb_manajemen_karyawans.id_perumahan =  tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_manajemen_karyawans.nama_karyawan DESC";
+        query = "SELECT * FROM tb_kasbons JOIN tb_manajemen_karyawans ON tb_kasbons.id_karyawan = tb_manajemen_karyawans.id_karyawan JOIN tb_perumahans ON tb_manajemen_karyawans.id_perumahan =  tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan AND tb_kasbons.tenor != '0' ORDER BY tb_manajemen_karyawans.nama_karyawan DESC";
     }
     if (req.body.param == 3) {
-        query = "SELECT * FROM tb_kasbons JOIN tb_manajemen_karyawans ON tb_kasbons.id_karyawan = tb_manajemen_karyawans.id_karyawan JOIN tb_perumahans ON tb_manajemen_karyawans.id_perumahan =  tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan AND tb_manajemen_karyawans.nama_karyawan LIKE :nama ORDER BY tb_manajemen_karyawans.nama_karyawan ASC";
+        query = "SELECT * FROM tb_kasbons JOIN tb_manajemen_karyawans ON tb_kasbons.id_karyawan = tb_manajemen_karyawans.id_karyawan JOIN tb_perumahans ON tb_manajemen_karyawans.id_perumahan =  tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan AND tb_manajemen_karyawans.nama_karyawan LIKE :nama AND tb_kasbons.tenor != '0' ORDER BY tb_manajemen_karyawans.nama_karyawan ASC";
     }
     if (req.body.param == 4) {
-        query = "SELECT * FROM tb_kasbons JOIN tb_manajemen_karyawans ON tb_kasbons.id_karyawan = tb_manajemen_karyawans.id_karyawan JOIN tb_perumahans ON tb_manajemen_karyawans.id_perumahan =  tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan AND tb_manajemen_karyawans.id_karyawan = :nama_kary ORDER BY tb_manajemen_karyawans.nama_karyawan ASC";
+        query = "SELECT * FROM tb_kasbons JOIN tb_manajemen_karyawans ON tb_kasbons.id_karyawan = tb_manajemen_karyawans.id_karyawan JOIN tb_perumahans ON tb_manajemen_karyawans.id_perumahan =  tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan AND tb_manajemen_karyawans.id_karyawan = :nama_kary AND tb_kasbons.tenor != '0' ORDER BY tb_manajemen_karyawans.nama_karyawan ASC";
     }
 
     db.sequelize.query(
