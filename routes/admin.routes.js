@@ -12,6 +12,7 @@ const controllerPerumahan = require("../controllers/perumahan.controller");
 const controllerAdmin = require("../controllers/auth.controller");
 const controllerTarikTunai = require("../controllers/tarikTunai.controller");
 const controllerPemasukan = require("../controllers/pemasukan.controller");
+const controllerQR = require("../controllers/generateQr.controller");
 
 const middleware = require("../middleware");
 const multer = require('multer')
@@ -421,6 +422,18 @@ module.exports = function (app) {
     app.post(
         "/api/admin/list/pemasukan_webview",
         controllerPemasukan.listPemasukan
+    )
+
+    app.post(
+        "/api/admin/qr/generate",
+        [authJwt.verifyToken],
+        controllerQR.generateQR
+    )
+
+    app.post(
+        "/api/admin/list/pemasukan_warga",
+        [authJwt.verifyToken],
+        controllerPemasukan.listPemasukanWarga
     )
 
 };

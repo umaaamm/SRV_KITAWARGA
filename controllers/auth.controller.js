@@ -2,7 +2,7 @@ const db = require("../models");
 const config = require("../config/auth.config");
 const User = db.admin;
 const Pengurus = db.pengurus;
-
+const Warga = db.daftarWarga;
 const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
@@ -26,19 +26,54 @@ exports.signup = (req, res) => {
     });
 };
 
-exports.signin = (req, res) => {
+exports.signin = async (req, res) => {
   User.findOne({
     where: {
-      email_admin: req.body.email_admin
+      no_hp_admin: req.body.no_hp
     }
   })
-    .then(user => {
+    .then(async (user) => {
       if (!user) {
-        return res.status(404).send({ message: "User Not found." });
+        const warga = await Warga.findOne({
+          where: {
+            no_hp_admin: req.body.no_hp
+          }
+        });
+
+        if (!warga) {
+          return res.status(404).send({ message: "User Not found." });
+        }
+
+        var passwordIsValid = bcrypt.compareSync(
+          req.body.password,
+          user.password_warga
+        );
+  
+        if (!passwordIsValid) {
+          return res.status(401).send({
+            accessToken: null,
+            message: "Invalid Password!"
+          });
+        }
+
+        var token = jwt.sign({ id_warga: warga.id_warga, role: 'warga', nama: warga.nama_warga }, config.secret, {
+          expiresIn: 3600 // 1 hours
+        });
+
+        res.status(200).send({
+          id_warga: warga.id_warga,
+          id_perumahan: warga.id_perumahan,
+          nama_warga: warga.nama_warga,
+          biaya_ipl: warga.biaya_ipl,
+          role: 'warga',
+          accessToken: token,
+        });
+
+        return;
       }
 
       var passwordIsValid = bcrypt.compareSync(
-        req.body.password_admin,
+        req.body.password,
         user.password_admin
       );
 

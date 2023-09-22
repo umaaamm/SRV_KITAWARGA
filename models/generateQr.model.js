@@ -1,52 +1,55 @@
 module.exports = (sequelize, Sequelize) => {
-    const DaftarWarga = sequelize.define("tb_daftar_warga", {
-      id_warga: {
+    const Qr = sequelize.define("tb_generate_qr", {
+      reference_id: {
         type: Sequelize.STRING,
         primaryKey: true
       },
-      nama_warga: {
+      type: {
         type: Sequelize.STRING
       },
-      blok_rumah: {
+      currency: {
         type: Sequelize.STRING
-      },
-      nomor_rumah: {
-        type: Sequelize.STRING
-      },
-      email: {
-        type: Sequelize.STRING
-      },
-      nomor_hp: {
-        type: Sequelize.STRING
-      },
-      is_rw: {
-        type: Sequelize.BOOLEAN
-      },
-      is_rt: {
-        type: Sequelize.BOOLEAN
-      },
-      id_rw: {
-        type: Sequelize.STRING
-      },
-      id_rt: {
-        type: Sequelize.STRING
-      },
-      id_perumahan: {
-        type: Sequelize.STRING
-      },
-      status_pernikahan: {
-        type: Sequelize.STRING
-      },
-      jenis_kelamin: {
-        type: Sequelize.STRING
-      },
-      biaya_ipl:{
+      },   
+      amount: {
         type: Sequelize.DECIMAL
       },
-      password_warga:{
+      channel_code: {
+        type: Sequelize.STRING
+      },
+      expires_at: {
+        type: Sequelize.STRING
+      },
+      description: {
+        type: Sequelize.STRING
+      },
+      metadata: {
+        type: Sequelize.STRING
+      },
+      business_id: {
+        type: Sequelize.STRING
+      },
+      id: {
+        type: Sequelize.STRING
+      },
+      created: {
+        type: Sequelize.STRING
+      },
+      updated: {
+        type: Sequelize.STRING
+      },
+      qr_string: {
+        type: Sequelize.TEXT
+      },
+      status: {
+        type: Sequelize.STRING
+      },
+      id_warga:{
+        type: Sequelize.STRING
+      },
+      id_perumahan:{
         type: Sequelize.STRING
       },
     });
   
-    return DaftarWarga;
+    return Qr;
   };

@@ -46,6 +46,7 @@ db.summary = require("../models/summary.model.js")(sequelize, Sequelize);
 db.gaji = require("../models/gaji.model.js")(sequelize, Sequelize);
 db.pengeluaran_bulanan = require("../models/pengeluaran_bulanan.model.js")(sequelize, Sequelize);
 db.tarik_tunai = require("../models/tarik_tunai.model.js")(sequelize, Sequelize);
+db.generateQr = require("../models/generateQr.model.js")(sequelize, Sequelize);
 
 
 module.exports = db;
