@@ -13,6 +13,11 @@ console.log('lllmlm', req);
         }
     });
 
+
+    console.log('mlmlmaaaa',dataFindQr );
+
+    console.log('mlmlmaaazzzzzza',dataFindQr.id_warga );
+
     Warga.findOne({
         where: {
             id_warga: dataFindQr.id_warga
