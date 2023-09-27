@@ -6,7 +6,7 @@ const Warga = db.daftarWarga;
 const QR = db.generateQr;
 
 exports.addPemasukan = async (req, res) => {
-
+console.log('lllmlm', req);
     const dataFindQr = await QR.findOne({
         where: {
             id: req.body.data.id
