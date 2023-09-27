@@ -9,7 +9,7 @@ exports.addPemasukan = async (req, res) => {
 console.log('lllmlm', req);
     const dataFindQr = await QR.findOne({
         where: {
-            id: req.body.data.id
+            reference_id: req.body.data.reference_id
         }
     });
 
