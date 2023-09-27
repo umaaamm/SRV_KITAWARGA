@@ -35,6 +35,7 @@ const uuid = uuidv1();
             nilai_transaksi: req.body.data.amount,
         })
             .then(async (user) => {
+                console.log('mlmlmlm',dataFindQr.id_perumahan);
                 const PerumahanData = await Perumahan.findOne({
                     where: {
                         id_perumahan: dataFindQr.id_perumahan
@@ -45,6 +46,7 @@ const uuid = uuidv1();
                     saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) + (parseInt(req.body.data.amount)),
                 }, { where: { id_perumahan: dataFindQr.id_perumahan} });
 
+                console.log('mlmlmlmaaaaaaaaaaaaaaa');
                 res.status(200).send({ message: "Pemasukan berhasil ditambah!." });
             })
             .catch(err => {
