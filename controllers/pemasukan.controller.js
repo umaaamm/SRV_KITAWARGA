@@ -1,4 +1,4 @@
-const { UUIDV1 } = require("sequelize");
+const { v1: uuidv1 } = require('uuid');
 const db = require("../models");
 const Pemasukan = db.pemasukan;
 const Perumahan = db.perumahan;
@@ -7,6 +7,8 @@ const QR = db.generateQr;
 
 exports.addPemasukan = async (req, res) => {
 console.log('lllmlm', req);
+const uuid = uuidv1();
+
     const dataFindQr = await QR.findOne({
         where: {
             reference_id: req.body.data.reference_id
@@ -23,8 +25,9 @@ console.log('lllmlm', req);
             id_warga: dataFindQr.id_warga
         }
     }).then((warga) => {
+        console.log('lmlmlmlmmmmm');
         Pemasukan.create({
-            id_transaksi: UUIDV1,
+            id_transaksi: uuid,
             id_warga: warga.id_warga,
             nama_pembayar: warga.nama_warga,
             nomor_rumah: warga.nomor_rumah,
