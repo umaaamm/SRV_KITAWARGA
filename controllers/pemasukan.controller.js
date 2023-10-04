@@ -6,7 +6,6 @@ const Warga = db.daftarWarga;
 const QR = db.generateQr;
 
 exports.addPemasukan = async (req, res) => {
-console.log('lllmlm', req);
 const uuid = uuidv1();
 
     const dataFindQr = await QR.findOne({
@@ -15,27 +14,22 @@ const uuid = uuidv1();
         }
     });
 
-
-    console.log('mlmlmaaaa',dataFindQr );
-
-    console.log('mlmlmaaazzzzzza',dataFindQr.id_warga );
-
     Warga.findOne({
         where: {
             id_warga: dataFindQr.id_warga
         }
     }).then((warga) => {
-        console.log('lmlmlmlmmmmm');
+
+        let totalDana = parseInt(req.body.data.amount) - (parseInt(req.body.data.amount)*0.007) - (parseInt(req.body.data.amount)*0.015)
         Pemasukan.create({
             id_transaksi: uuid,
             id_warga: warga.id_warga,
             nama_pembayar: warga.nama_warga,
             nomor_rumah: warga.nomor_rumah,
             tanggal_transaksi: Math.floor(new Date().getTime() / 1000),
-            nilai_transaksi: req.body.data.amount,
+            nilai_transaksi: totalDana,
         })
             .then(async (user) => {
-                console.log('mlmlmlm',dataFindQr.id_perumahan);
                 const PerumahanData = await Perumahan.findOne({
                     where: {
                         id_perumahan: dataFindQr.id_perumahan
@@ -46,7 +40,6 @@ const uuid = uuidv1();
                     saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) + (parseInt(req.body.data.amount)),
                 }, { where: { id_perumahan: dataFindQr.id_perumahan} });
 
-                console.log('mlmlmlmaaaaaaaaaaaaaaa');
                 res.status(200).send({ message: "Pemasukan berhasil ditambah!." });
             })
             .catch(err => {
