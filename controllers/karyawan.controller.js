@@ -75,11 +75,27 @@ exports.mockData = async (req, res) => {
         }
     )
 
+    const dataPengeluaranBulanan  = await db.sequelize.query(
+        "select sum(nilai_transaksi_pengeluaran_bulanan) as nilai_transaksi_pengeluaran_bulanan from tb_pengeluaran_bulanans where tb_pengeluaran_bulanans.id_perumahan = :id_perumahan",
+        {
+            replacements: { id_perumahan: req.body.id_perumahan},
+            type: db.sequelize.QueryTypes.SELECT
+        }
+    )
 
+    const dataPengeluaranGaji  = await db.sequelize.query(
+        "select sum(jumlah_gaji) as jumlah_gaji from tb_gajis where tb_gajis.id_perumahan = :id_perumahan",
+        {
+            replacements: { id_perumahan: req.body.id_perumahan},
+            type: db.sequelize.QueryTypes.SELECT
+        }
+    )
+
+    let totalPengeluaran = parseInt(dataPengeluaran[0].nilai_transaksi || 0) + parseInt(dataPengeluaranGaji[0].jumlah_gaji || 0) + parseInt(dataPengeluaranBulanan[0].nilai_transaksi_pengeluaran_bulanan || 0) 
     let data = {
         "total_saldo": PerumahanData.saldo_perumahan || '0', 
         "total_pemasukan_bulan_ini": dataPemasukan[0].nilai_transaksi || '0',
-        "total_pengeluaran_bulan_ini": dataPengeluaran[0].nilai_transaksi || '0',
+        "total_pengeluaran_bulan_ini": totalPengeluaran.toString() || '0',
         "selisih": `${dataPemasukan[0].nilai_transaksi - dataPengeluaran[0].nilai_transaksi}` || '0',
     }
 
