@@ -33,6 +33,7 @@ exports.generateQR = async (req, res) => {
       };
 
     axiosInstance.post(APIURL.GenerateQr, requestData, axiosConfig ).then((response) => {
+        console.log('mlmlmaaa', response);
         Generate.create({
             reference_id: response.reference_id,
             type: response.type,
@@ -54,9 +55,11 @@ exports.generateQR = async (req, res) => {
             isMultiMonth: req.body.isMultiMonth,
             amountList: Number(wargaData.biaya_ipl) * req.body.list_bulan.length,
         }).then((qr) => {
+            console.log('aaaaaa', qr);
             res.status(200).send({ message: "Qr berhasil digenerate!.", data: response });
         })
     }).catch((error) => {
+        console.log('fdfmdfmdmfm', error);
         res.status(500).send({ message: error });
     });
 };
