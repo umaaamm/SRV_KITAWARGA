@@ -24,6 +24,10 @@ exports.generateQR = async (req, res) => {
         expires_at: expiryDate
     }
 
+    console.log('mfldmfldmfldmfldmfld', req.body.list_bulan.length);
+
+    console.log('mfldmfldmfldmfldmfld', requestData);
+
     const headers = {
         'for-user-id': req.body.id_perumahan,
       };
