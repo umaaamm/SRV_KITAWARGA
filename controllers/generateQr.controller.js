@@ -18,7 +18,7 @@ exports.generateQR = async (req, res) => {
         reference_id: `order-id-` + Date.now(),
         type: "DYNAMIC",
         currency: "IDR",
-        amount: Number(wargaData.biaya_ipl),
+        amount: Number(wargaData.biaya_ipl) * req.body.list_bulan.length,
         expires_at: expiryDate
     }
 
@@ -48,6 +48,9 @@ exports.generateQR = async (req, res) => {
             status: response.status,
             id_warga: wargaData.id_warga,
             id_perumahan: wargaData.id_perumahan,
+            list_bulan: req.body.list_bulan,
+            isMultiMonth: req.body.isMultiMonth,
+            amountList: Number(wargaData.biaya_ipl) * req.body.list_bulan.length,
         }).then((qr) => {
             res.status(200).send({ message: "Qr berhasil digenerate!.", data: response });
         })

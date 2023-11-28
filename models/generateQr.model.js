@@ -49,6 +49,15 @@ module.exports = (sequelize, Sequelize) => {
       id_perumahan:{
         type: Sequelize.STRING
       },
+      list_bulan:{
+        type: Sequelize.JSON
+      },
+      isMultiMonth: {
+        type: Sequelize.STRING
+      },
+      amountList: {
+        type: Sequelize.DECIMAL
+      }
     });
   
     return Qr;

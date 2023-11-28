@@ -18,6 +18,9 @@ module.exports = (sequelize, Sequelize) => {
       },
       nilai_transaksi: {
         type: Sequelize.DECIMAL
+      },
+      bulan: {
+        type: Sequelize.STRING
       }
     });
   

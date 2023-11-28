@@ -6,46 +6,55 @@ const Warga = db.daftarWarga;
 const QR = db.generateQr;
 
 exports.addPemasukan = async (req, res) => {
-const uuid = uuidv1();
-
     const dataFindQr = await QR.findOne({
         where: {
             reference_id: req.body.data.reference_id
         }
     });
 
-    Warga.findOne({
-        where: {
-            id_warga: dataFindQr.id_warga
-        }
-    }).then((warga) => {
+    if (dataFindQr.list_bulan.length > 0) {
+        dataFindQr.list_bulan.map((item,idx) => {
+            const uuid = uuidv1();
+            Warga.findOne({
+                where: {
+                    id_warga: dataFindQr.id_warga
+                }
+            }).then((warga) => {
+                let dataSum = parseInt(req.body.data.amount) / parseInt(dataFindQr.list_bulan.length)
+                let totalDana =  parseInt(dataSum) - (parseInt(dataSum) * 0.007) - (parseInt(dataSum) * 0.015)
 
-        let totalDana = parseInt(req.body.data.amount) - (parseInt(req.body.data.amount)*0.007) - (parseInt(req.body.data.amount)*0.015)
-        Pemasukan.create({
-            id_transaksi: uuid,
-            id_warga: warga.id_warga,
-            nama_pembayar: warga.nama_warga,
-            nomor_rumah: warga.nomor_rumah,
-            tanggal_transaksi: Math.floor(new Date().getTime() / 1000),
-            nilai_transaksi: totalDana,
-        })
-            .then(async (user) => {
-                const PerumahanData = await Perumahan.findOne({
-                    where: {
-                        id_perumahan: dataFindQr.id_perumahan
-                    }
-                });
+                Pemasukan.create({
+                    id_transaksi: uuid,
+                    id_warga: warga.id_warga,
+                    nama_pembayar: warga.nama_warga,
+                    nomor_rumah: warga.nomor_rumah,
+                    tanggal_transaksi: Math.floor(new Date().getTime() / 1000),
+                    nilai_transaksi: totalDana,
+                    bulan: item.nama
+                })
+                    .then(async (user) => {
+                        const PerumahanData = await Perumahan.findOne({
+                            where: {
+                                id_perumahan: dataFindQr.id_perumahan
+                            }
+                        });
 
-                await Perumahan.update({
-                    saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) + (parseInt(req.body.data.amount)),
-                }, { where: { id_perumahan: dataFindQr.id_perumahan} });
+                        await Perumahan.update({
+                            saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) + (parseInt(req.body.data.amount)),
+                        }, { where: { id_perumahan: dataFindQr.id_perumahan } });
 
-                res.status(200).send({ message: "Pemasukan berhasil ditambah!." });
+
+                       
+                    })
+                    .catch(err => {
+                        res.status(500).send({ message: err.message });
+                    });
             })
-            .catch(err => {
-                res.status(500).send({ message: err.message });
-            });
-    })
+
+        })
+
+            res.status(200).send({ message: "Pemasukan berhasil ditambah!." });
+    }
 };
 
 
@@ -78,7 +87,7 @@ exports.addPemasukanVA = async (req, res) => {
 
                 await Perumahan.update({
                     saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) + (parseInt(req.body.amount)),
-                }, { where: { id_perumahan: dataFindQr.id_perumahan} });
+                }, { where: { id_perumahan: dataFindQr.id_perumahan } });
 
                 res.status(200).send({ message: "Pemasukan berhasil ditambah!." });
             })
