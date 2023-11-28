@@ -91,7 +91,15 @@ exports.mockData = async (req, res) => {
         }
     )
 
-    let totalPengeluaran = parseInt(dataPengeluaran[0].nilai_transaksi || 0) + parseInt(dataPengeluaranGaji[0].jumlah_gaji || 0) + parseInt(dataPengeluaranBulanan[0].nilai_transaksi_pengeluaran_bulanan || 0) 
+    const dataPengeluaranKasbon  = await db.sequelize.query(
+        "select sum(pinjaman) as jumlah_kasbon from tb_kasbons join tb_manajemen_karyawans on tb_kasbons.id_karyawan = tb_manajemen_karyawans.id_karyawan  where tb_manajemen_karyawans.id_perumahan =:id_perumahan",
+        {
+            replacements: { id_perumahan: req.body.id_perumahan},
+            type: db.sequelize.QueryTypes.SELECT
+        }
+    )
+
+    let totalPengeluaran = parseInt(dataPengeluaran[0].nilai_transaksi || 0) + parseInt(dataPengeluaranGaji[0].jumlah_gaji || 0) + parseInt(dataPengeluaranBulanan[0].nilai_transaksi_pengeluaran_bulanan || 0) +  parseInt(dataPengeluaranKasbon[0].jumlah_kasbon || 0)
     let data = {
         "total_saldo": PerumahanData.saldo_perumahan || '0', 
         "total_pemasukan_bulan_ini": dataPemasukan[0].nilai_transaksi || '0',
