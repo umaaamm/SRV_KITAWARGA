@@ -14,6 +14,8 @@ exports.generateQR = async (req, res) => {
         }
     })
 
+    console.log('mlfdmfldm', req.body);
+
     const requestData = {
         reference_id: `order-id-` + Date.now(),
         type: "DYNAMIC",
