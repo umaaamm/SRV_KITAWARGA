@@ -14,8 +14,6 @@ exports.generateQR = async (req, res) => {
         }
     })
 
-    console.log('mlfdmfldm', req.body);
-
     const requestData = {
         reference_id: `order-id-` + Date.now(),
         type: "DYNAMIC",
@@ -23,10 +21,6 @@ exports.generateQR = async (req, res) => {
         amount: Number(wargaData.biaya_ipl) * req.body.list_bulan.length,
         expires_at: expiryDate
     }
-
-    console.log('mfldmfldmfldmfldmfld', req.body.list_bulan.length);
-
-    console.log('mfldmfldmfldmfldmfld', requestData);
 
     const headers = {
         'for-user-id': req.body.id_perumahan,

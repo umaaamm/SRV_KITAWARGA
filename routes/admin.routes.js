@@ -425,6 +425,11 @@ module.exports = function (app) {
     )
 
     app.post(
+        "/api/admin/list/pemasukan_webview_new",
+        controllerPemasukan.listPemasukanLaporan
+    )
+
+    app.post(
         "/api/admin/qr/generate",
         [authJwt.verifyToken],
         controllerQR.generateQR

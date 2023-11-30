@@ -13,7 +13,7 @@ exports.addPemasukan = async (req, res) => {
     });
 
     if (dataFindQr.list_bulan.length > 0) {
-        dataFindQr.list_bulan.map((item,idx) => {
+        dataFindQr.list_bulan.map((item, idx) => {
             const uuid = uuidv1();
             Warga.findOne({
                 where: {
@@ -21,7 +21,7 @@ exports.addPemasukan = async (req, res) => {
                 }
             }).then((warga) => {
                 let dataSum = parseInt(req.body.data.amount) / parseInt(dataFindQr.list_bulan.length)
-                let totalDana =  parseInt(dataSum) - (parseInt(dataSum) * 0.007) - (parseInt(dataSum) * 0.015)
+                let totalDana = parseInt(dataSum) - (parseInt(dataSum) * 0.007) - (parseInt(dataSum) * 0.015)
 
                 Pemasukan.create({
                     id_transaksi: uuid,
@@ -44,7 +44,7 @@ exports.addPemasukan = async (req, res) => {
                         }, { where: { id_perumahan: dataFindQr.id_perumahan } });
 
 
-                       
+
                     })
                     .catch(err => {
                         res.status(500).send({ message: err.message });
@@ -53,7 +53,7 @@ exports.addPemasukan = async (req, res) => {
 
         })
 
-            res.status(200).send({ message: "Pemasukan berhasil ditambah!." });
+        res.status(200).send({ message: "Pemasukan berhasil ditambah!." });
     }
 };
 
@@ -107,6 +107,44 @@ exports.listPemasukan = (req, res) => {
         }
     ).then(result => {
         res.status(200).json({ message: "Berhasil Get Data Pemasukan.", data: result });
+    })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+}
+
+
+exports.listPemasukanLaporan = (req, res) => {
+    db.sequelize.query(
+        "select tb_pemasukans.tanggal_transaksi,tb_pemasukans.id_transaksi,tb_pemasukans.id_warga, tb_pemasukans.nilai_transaksi ,tb_pemasukans.bulan , tb_pemasukans.nama_pembayar,tb_pemasukans.tanggal_transaksi from tb_pemasukans join tb_daftar_wargas on tb_pemasukans.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan ",
+        {
+            type: db.sequelize.QueryTypes.SELECT,
+            replacements: { id_perumahan: req.body.id_perumahan},
+        }
+    ).then(result => {
+        let dataTemp = []
+        
+        result.map((item) => {
+            const datku = dataTemp.find((i) => i.id_warga == item.id_warga)
+            const index = dataTemp.findIndex((i) => i.id_warga === item.id_warga);
+            const itemYear = new Date(item.tanggal_transaksi * 1000).getFullYear();
+            if (itemYear != req.body.tahun) {
+                return
+            }
+
+            if (datku) {
+                dataTemp[index].data.push(item)
+            } else {
+                dataTemp.push({
+                    id_transaksi: item.id_transaksi,
+                    id_warga: item.id_warga,
+                    nama_pembayar: item.nama_pembayar,
+                    data: [item]
+                })
+            }
+        })
+        
+        res.status(200).json({ message: "Berhasil Get Data Pemasukan.", data: dataTemp });
     })
         .catch(err => {
             res.status(500).send({ message: err.message });
