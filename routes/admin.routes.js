@@ -142,6 +142,11 @@ module.exports = function (app) {
     )
 
     app.post(
+        "/api/admin/list/pengeluaran_gaji_new",
+        controllerPengeluaran.listPengeluaranGajiNew
+    )
+
+    app.post(
         "/api/admin/list/pengeluaran_bulanan",
         [authJwt.verifyToken],
         controllerPengeluaran.listPengeluaranBulanan
@@ -154,6 +159,11 @@ module.exports = function (app) {
     )
 
     app.post(
+        "/api/admin/list/pengeluaran_kasbon_new",
+        controllerPengeluaran.listPengeluaranKasbonNew
+    )
+
+    app.post(
         "/api/admin/list/pengeluaran_mobile",
         [authJwt.verifyToken],
         controllerPengeluaran.listPengeluaranMobile
@@ -162,6 +172,11 @@ module.exports = function (app) {
     app.post(
         "/api/admin/list/pengeluaran_webview",
         controllerPengeluaran.listPengeluaran
+    )
+
+    app.post(
+        "/api/admin/list/pengeluaran_webview_new",
+        controllerPengeluaran.listPengeluaranBulananNew
     )
 
     // end Pengeluaran

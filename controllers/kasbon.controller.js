@@ -14,7 +14,13 @@ exports.addKasbon = (req, res) => {
         keterangan: req.body.keterangan,
     })
         .then(user => {
-            res.status(200).send({ message: "Kasbon berhasil ditambah!." });
+            Karyawan.update({
+                sisa_kasbon: req.body.pinjaman,
+            }, {
+                where: { id_karyawan: req.body.id_karyawan }
+            }).then(res => {
+                res.status(200).send({ message: "Kasbon berhasil ditambah!." });
+            });
         })
         .catch(err => {
             res.status(500).send({ message: err.message });
@@ -74,7 +80,7 @@ exports.listKasbon = (req, res) => {
     db.sequelize.query(
         query,
         {
-            replacements: { id_perumahan: req.body.id_perumahan, nama_kary:req.body.nama ,nama: '%' + req.body.nama + '%' },
+            replacements: { id_perumahan: req.body.id_perumahan, nama_kary: req.body.nama, nama: '%' + req.body.nama + '%' },
             type: db.sequelize.QueryTypes.SELECT
         }
     ).then(result => {

@@ -92,36 +92,35 @@ exports.addPengeluaran = async (req, res) => {
         }
 
         if (kategori.nama_kategori_transaksi == "Gaji") {
-            console.log('mlmlml', req.body.id_karyawan);
             const uuid = uuidv1();
 
-                const valueK = await Karyawan.findOne({
-                    where: {
-                        id_karyawan: req.body.id_karyawan
-                    }
-                });
+            const valueK = await Karyawan.findOne({
+                where: {
+                    id_karyawan: req.body.id_karyawan
+                }
+            });
 
-                totalGaji = valueK.gaji_bulanan;
-                await Gaji.create({
-                    id_gaji: uuid,
-                    id_karyawan: req.body.id_karyawan,
-                    tanggal_gaji: req.body.tanggal_transaksi,
-                    jumlah_gaji: totalGaji,
+            totalGaji = valueK.gaji_bulanan;
+            await Gaji.create({
+                id_gaji: uuid,
+                id_karyawan: req.body.id_karyawan,
+                tanggal_gaji: req.body.tanggal_transaksi,
+                jumlah_gaji: totalGaji,
+                id_perumahan: req.body.id_perumahan
+            });
+
+            const PerumahanData = await Perumahan.findOne({
+                where: {
                     id_perumahan: req.body.id_perumahan
-                });
+                }
+            });
 
-                const PerumahanData = await Perumahan.findOne({
-                    where: {
-                        id_perumahan: req.body.id_perumahan
-                    }
-                });
+            await Perumahan.update({
+                saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) - parseInt(totalGaji),
+            }, { where: { id_perumahan: req.body.id_perumahan } });
 
-                await Perumahan.update({
-                    saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) - parseInt(totalGaji),
-                }, { where: { id_perumahan: req.body.id_perumahan } });
-
-                res.status(200).send({ message: "Penggajian berhasil ditambah!." });
-                return;
+            res.status(200).send({ message: "Penggajian berhasil ditambah!." });
+            return;
         }
 
         const uuid = uuidv1();
@@ -262,6 +261,48 @@ exports.listPengeluaranGaji = async (req, res) => {
 
 }
 
+exports.listPengeluaranGajiNew = async (req, res) => {
+    db.sequelize.query(
+        "SELECT tb_manajemen_karyawans.posisi, tb_manajemen_karyawans.gaji_bulanan, tb_manajemen_karyawans.id_karyawan, tb_manajemen_karyawans.nama_karyawan, tb_gajis.jumlah_gaji, tb_gajis.tanggal_gaji, tb_gajis.id_gaji FROM tb_gajis JOIN tb_manajemen_karyawans ON tb_gajis.id_karyawan = tb_manajemen_karyawans.id_karyawan JOIN tb_perumahans ON tb_gajis.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_gajis.tanggal_gaji DESC",
+        {
+            replacements: { id_perumahan: req.body.id_perumahan },
+            type: db.sequelize.QueryTypes.SELECT
+        }
+    ).then(result => {
+        let dataTemp = [];
+        result.map((item) => {
+
+            const datku = dataTemp.find((i) => i.id_karyawan == item.id_karyawan)
+            const index = dataTemp.findIndex((i) => i.id_karyawan === item.id_karyawan);
+            const itemYear = new Date(Number(item.tanggal_gaji)).getFullYear();
+
+            if (itemYear != req.body.tahun) {
+                return
+            }
+
+            if (datku) {
+                dataTemp[index].data.push(item)
+            } else {
+                dataTemp.push({
+                    id_gaji: item.id_gaji,
+                    id_karyawan: item.id_karyawan,
+                    nama_karyawan: item.nama_karyawan,
+                    posisi: item.posisi,
+                    gaji_bulanan: item.gaji_bulanan,
+                    data: [item]
+                })
+            }
+        });
+
+
+        res.status(200).json({ message: "Berhasil Get Data Gaji.", data: dataTemp });
+    })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+
+}
+
 exports.listPengeluaranKasbon = async (req, res) => {
     db.sequelize.query(
         "SELECT * FROM tb_pengeluarans JOIN tb_ketegoris ON tb_pengeluarans.id_kategori = tb_ketegoris.id_kategori LEFT JOIN tb_kasbons ON tb_pengeluarans.id_kasbon = tb_kasbons.id_kasbon JOIN tb_perumahans ON tb_pengeluarans.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_pengeluarans.tanggal_transaksi ASC",
@@ -277,6 +318,45 @@ exports.listPengeluaranKasbon = async (req, res) => {
         });
 }
 
+exports.listPengeluaranKasbonNew = async (req, res) => {
+    db.sequelize.query(
+        "SELECT * from  tb_kasbons join tb_manajemen_karyawans ON tb_manajemen_karyawans.id_karyawan  = tb_kasbons.id_karyawan WHERE tb_manajemen_karyawans.id_perumahan = :id_perumahan ORDER BY tb_kasbons.tanggal_transaksi ASC",
+        {
+            replacements: { id_perumahan: req.body.id_perumahan },
+            type: db.sequelize.QueryTypes.SELECT
+        }
+    ).then(result => {
+
+        let dataTemp = [];
+        result.map((item) => {
+
+            const datku = dataTemp.find((i) => i.id_karyawan == item.id_karyawan)
+            const index = dataTemp.findIndex((i) => i.id_karyawan === item.id_karyawan);
+            const itemYear = new Date(Number(item.tanggal_transaksi) * 1000).getFullYear();
+
+            if (itemYear != req.body.tahun) {
+                return
+            }
+
+            if (datku) {
+                dataTemp[index].data.push(item)
+            } else {
+                dataTemp.push({
+                    id_kasbon: item.id_kasbon,
+                    id_karyawan: item.id_karyawan,
+                    nama_karyawan: item.nama_karyawan,
+                    data: [item]
+                })
+            }
+        });
+
+        res.status(200).json({ message: "Berhasil Get Data Kasbon.", data: dataTemp });
+    })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+}
+
 exports.listPengeluaranBulanan = async (req, res) => {
     db.sequelize.query(
         "SELECT * FROM tb_pengeluaran_bulanans JOIN tb_ketegoris ON tb_pengeluaran_bulanans.id_kategori = tb_ketegoris.id_kategori JOIN tb_perumahans ON tb_pengeluaran_bulanans.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_pengeluaran_bulanans.tanggal_transaksi_pengeluaran_bulanan DESC",
@@ -286,6 +366,45 @@ exports.listPengeluaranBulanan = async (req, res) => {
         }
     ).then(result => {
         res.status(200).json({ message: "Berhasil Get Data Pengeluaran Bulanan.", data: result });
+    })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+}
+
+
+exports.listPengeluaranBulananNew = async (req, res) => {
+    db.sequelize.query(
+        "SELECT * FROM tb_pengeluaran_bulanans JOIN tb_ketegoris ON tb_pengeluaran_bulanans.id_kategori = tb_ketegoris.id_kategori JOIN tb_perumahans ON tb_pengeluaran_bulanans.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_pengeluaran_bulanans.tanggal_transaksi_pengeluaran_bulanan DESC",
+        {
+            replacements: { id_perumahan: req.body.id_perumahan },
+            type: db.sequelize.QueryTypes.SELECT
+        }
+    ).then(result => {
+        let dataTemp = [];
+        result.map((item) => {
+            const itemMonth = new Date(Number(item.tanggal_transaksi_pengeluaran_bulanan)).getMonth();
+        
+            const datku = dataTemp.find((i) => new Date(Number(i.tanggal_transaksi_pengeluaran_bulanan)).getMonth() == itemMonth);
+            const index = dataTemp.findIndex((i) => new Date(Number(i.tanggal_transaksi_pengeluaran_bulanan)).getMonth() == itemMonth);
+            const itemYear = new Date(Number(item.tanggal_transaksi_pengeluaran_bulanan)).getFullYear();
+
+            if (itemYear != req.body.tahun) {
+                return
+            }
+
+            if (datku) {
+                dataTemp[index].data.push(item)
+            } else {
+                dataTemp.push({
+                    id_perumahan: item.id_perumahan,
+                    nama_perumahan: item.nama_perumahan,
+                    bulan:itemMonth,
+                    data: [item]
+                })
+            }
+        });
+        res.status(200).json({ message: "Berhasil Get Data Pengeluaran Bulanan.", data: dataTemp });
     })
         .catch(err => {
             res.status(500).send({ message: err.message });
