@@ -442,6 +442,12 @@ module.exports = function (app) {
     )
 
     app.post(
+        "/api/admin/list/pemasukan_user",
+        [authJwt.verifyToken],
+        controllerPemasukan.listPemasukanWarga
+    )
+
+    app.post(
         "/api/admin/list/pemasukan_webview",
         controllerPemasukan.listPemasukan
     )

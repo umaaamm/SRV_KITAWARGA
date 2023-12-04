@@ -276,6 +276,14 @@ exports.listPengeluaranGajiNew = async (req, res) => {
             const index = dataTemp.findIndex((i) => i.id_karyawan === item.id_karyawan);
             const itemYear = new Date(Number(item.tanggal_gaji)).getFullYear();
 
+            const itemMonth = new Date(Number(item.tanggal_gaji)).getMonth();
+
+            const monthsArray = [
+                "Januari", "Februari", "Maret", "April",
+                "Mei", "Juni", "Juli", "Agustus",
+                "September", "Oktober", "November", "Desember"
+            ];
+
             if (itemYear != req.body.tahun) {
                 return
             }
@@ -289,6 +297,7 @@ exports.listPengeluaranGajiNew = async (req, res) => {
                     nama_karyawan: item.nama_karyawan,
                     posisi: item.posisi,
                     gaji_bulanan: item.gaji_bulanan,
+                    bulan: monthsArray[itemMonth - 1],
                     data: [item]
                 })
             }
@@ -352,7 +361,7 @@ exports.listPengeluaranKasbonNew = async (req, res) => {
                     id_kasbon: item.id_kasbon,
                     id_karyawan: item.id_karyawan,
                     nama_karyawan: item.nama_karyawan,
-                    bulan : monthsArray[itemMonth-1],
+                    bulan: monthsArray[itemMonth - 1],
                     data: [item]
                 })
             }
