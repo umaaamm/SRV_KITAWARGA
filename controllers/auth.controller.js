@@ -36,7 +36,7 @@ exports.signin = async (req, res) => {
       if (!user) {
         const warga = await Warga.findOne({
           where: {
-            no_hp_admin: req.body.no_hp
+            nomor_hp: req.body.no_hp
           }
         });
 
@@ -46,7 +46,7 @@ exports.signin = async (req, res) => {
 
         var passwordIsValid = bcrypt.compareSync(
           req.body.password,
-          user.password_warga
+          warga.password_warga
         );
   
         if (!passwordIsValid) {

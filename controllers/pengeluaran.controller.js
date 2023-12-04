@@ -333,6 +333,13 @@ exports.listPengeluaranKasbonNew = async (req, res) => {
             const datku = dataTemp.find((i) => i.id_karyawan == item.id_karyawan)
             const index = dataTemp.findIndex((i) => i.id_karyawan === item.id_karyawan);
             const itemYear = new Date(Number(item.tanggal_transaksi) * 1000).getFullYear();
+            const itemMonth = new Date(Number(item.tanggal_transaksi) * 1000).getMonth();
+
+            const monthsArray = [
+                "Januari", "Februari", "Maret", "April",
+                "Mei", "Juni", "Juli", "Agustus",
+                "September", "Oktober", "November", "Desember"
+            ];
 
             if (itemYear != req.body.tahun) {
                 return
@@ -345,6 +352,7 @@ exports.listPengeluaranKasbonNew = async (req, res) => {
                     id_kasbon: item.id_kasbon,
                     id_karyawan: item.id_karyawan,
                     nama_karyawan: item.nama_karyawan,
+                    bulan : monthsArray[itemMonth-1],
                     data: [item]
                 })
             }
@@ -384,7 +392,13 @@ exports.listPengeluaranBulananNew = async (req, res) => {
         let dataTemp = [];
         result.map((item) => {
             const itemMonth = new Date(Number(item.tanggal_transaksi_pengeluaran_bulanan)).getMonth();
-        
+
+            const monthsArray = [
+                "Januari", "Februari", "Maret", "April",
+                "Mei", "Juni", "Juli", "Agustus",
+                "September", "Oktober", "November", "Desember"
+            ];
+
             const datku = dataTemp.find((i) => new Date(Number(i.tanggal_transaksi_pengeluaran_bulanan)).getMonth() == itemMonth);
             const index = dataTemp.findIndex((i) => new Date(Number(i.tanggal_transaksi_pengeluaran_bulanan)).getMonth() == itemMonth);
             const itemYear = new Date(Number(item.tanggal_transaksi_pengeluaran_bulanan)).getFullYear();
@@ -399,7 +413,7 @@ exports.listPengeluaranBulananNew = async (req, res) => {
                 dataTemp.push({
                     id_perumahan: item.id_perumahan,
                     nama_perumahan: item.nama_perumahan,
-                    bulan:itemMonth,
+                    bulan: monthsArray[itemMonth - 1],
                     data: [item]
                 })
             }

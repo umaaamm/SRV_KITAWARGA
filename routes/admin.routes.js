@@ -13,6 +13,8 @@ const controllerAdmin = require("../controllers/auth.controller");
 const controllerTarikTunai = require("../controllers/tarikTunai.controller");
 const controllerPemasukan = require("../controllers/pemasukan.controller");
 const controllerQR = require("../controllers/generateQr.controller");
+const controllerInv = require("../controllers/generateInv.controller");
+const pemasukanInv = require("../controllers/pemasukanInvoice.controller");
 
 const middleware = require("../middleware");
 const multer = require('multer')
@@ -424,6 +426,11 @@ module.exports = function (app) {
     )
 
     app.post(
+        "/api/admin/insert/pemasukan_webhook_invoice",
+        pemasukanInv.addPemasukanInv
+    )
+
+    app.post(
         "/api/admin/insert/pemasukan_webhook_va",
         controllerPemasukan.addPemasukanVA
     )
@@ -448,6 +455,12 @@ module.exports = function (app) {
         "/api/admin/qr/generate",
         [authJwt.verifyToken],
         controllerQR.generateQR
+    )
+
+    app.post(
+        "/api/admin/invoice/generate",
+        [authJwt.verifyToken],
+        controllerInv.generateInv
     )
 
     app.post(
