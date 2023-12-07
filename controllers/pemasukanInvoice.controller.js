@@ -95,7 +95,7 @@ exports.listPemasukanInv = (req, res) => {
 
 exports.listPemasukanLaporanInv = (req, res) => {
     db.sequelize.query(
-        "select * from tb_pemasukans join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan ",
+        "select * from tb_pemasukan_invoices join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan ",
         {
             type: db.sequelize.QueryTypes.SELECT,
             replacements: { id_perumahan: req.body.id_perumahan},
@@ -132,9 +132,9 @@ exports.listPemasukanLaporanInv = (req, res) => {
 
 exports.listPemasukanWargaInv = (req, res) => {
     db.sequelize.query(
-        "SELECT * FROM tb_pemasukans where tb_pemasukan_invoices.id_warga = :id_warga ORDER BY tb_pemasukan_invoices.tanggal_transaksi DESC",
+        "SELECT * FROM tb_pemasukan_invoices JOIN tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_pemasukan_invoices.id_warga = :id_warga AND tb_daftar_wargas.id_perumahan = :id_perumahan ORDER BY tb_pemasukan_invoices.tanggal_transaksi DESC",
         {
-            replacements: { id_warga: req.body.id_warga },
+            replacements: { id_warga: req.body.id_warga, id_perumahan: req.body.id_perumahan },
             type: db.sequelize.QueryTypes.SELECT
         }
     ).then(result => {

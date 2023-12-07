@@ -49,5 +49,6 @@ db.tarik_tunai = require("../models/tarik_tunai.model.js")(sequelize, Sequelize)
 db.generateQr = require("../models/generateQr.model.js")(sequelize, Sequelize);
 db.Invoice = require("../models/generateInvoice.model.js")(sequelize, Sequelize);
 db.pemasukanInvoice = require("../models/pemasukan_invoice.model.js")(sequelize, Sequelize);
+db.disbursement = require("../models/disbursement.model.js")(sequelize, Sequelize);
 
 module.exports = db;

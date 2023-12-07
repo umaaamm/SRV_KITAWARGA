@@ -314,7 +314,7 @@ exports.listPengeluaranGajiNew = async (req, res) => {
 
 exports.listPengeluaranKasbon = async (req, res) => {
     db.sequelize.query(
-        "SELECT * FROM tb_pengeluarans JOIN tb_ketegoris ON tb_pengeluarans.id_kategori = tb_ketegoris.id_kategori LEFT JOIN tb_kasbons ON tb_pengeluarans.id_kasbon = tb_kasbons.id_kasbon JOIN tb_perumahans ON tb_pengeluarans.id_perumahan = tb_perumahans.id_perumahan WHERE tb_perumahans.id_perumahan = :id_perumahan ORDER BY tb_pengeluarans.tanggal_transaksi ASC",
+        "SELECT * from  tb_kasbons join tb_manajemen_karyawans ON tb_manajemen_karyawans.id_karyawan  = tb_kasbons.id_karyawan WHERE tb_manajemen_karyawans.id_perumahan = :id_perumahan ORDER BY tb_kasbons.tanggal_transaksi ASC",
         {
             replacements: { id_perumahan: req.body.id_perumahan },
             type: db.sequelize.QueryTypes.SELECT

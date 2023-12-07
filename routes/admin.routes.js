@@ -15,6 +15,7 @@ const controllerPemasukan = require("../controllers/pemasukan.controller");
 const controllerQR = require("../controllers/generateQr.controller");
 const controllerInv = require("../controllers/generateInv.controller");
 const pemasukanInv = require("../controllers/pemasukanInvoice.controller");
+const disbursementC = require("../controllers/disbursement.controller");
 
 const middleware = require("../middleware");
 const multer = require('multer')
@@ -436,6 +437,18 @@ module.exports = function (app) {
     )
 
     app.post(
+        "/api/admin/insert/disbursement",
+        [authJwt.verifyToken],
+        disbursementC.generateDisbursement
+    )
+
+    app.post(
+        "/api/admin/balance",
+        [authJwt.verifyToken],
+        disbursementC.getBalance
+    )
+
+    app.post(
         "/api/admin/list/pemasukan",
         [authJwt.verifyToken],
         controllerPemasukan.listPemasukan
@@ -452,10 +465,32 @@ module.exports = function (app) {
         controllerPemasukan.listPemasukan
     )
 
+    
+
     app.post(
         "/api/admin/list/pemasukan_webview_new",
         controllerPemasukan.listPemasukanLaporan
     )
+
+
+    app.post(
+        "/api/admin/list/pemasukan_invoice",
+        [authJwt.verifyToken],
+        pemasukanInv.listPemasukanInv
+    )
+
+    app.post(
+        "/api/admin/list/pemasukan_user_invoice",
+        [authJwt.verifyToken],
+        pemasukanInv.listPemasukanWargaInv
+    )
+
+    app.post(
+        "/api/admin/list/pemasukan_webview_invoice",
+        pemasukanInv.listPemasukanLaporanInv
+    )
+
+
 
     app.post(
         "/api/admin/qr/generate",
