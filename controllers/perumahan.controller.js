@@ -9,7 +9,10 @@ exports.addPERUMAHAN = (req, res) => {
         saldo_perumahan: req.body.saldo_perumahan,
         link_cctv: req.body.link_cctv,
         link_img_qr: req.body.link_img_qr,
-        alamat_maps: req.body.alamat_maps
+        alamat_maps: req.body.alamat_maps,
+        bank_code: req.body.bank_code,
+        account_holder_name: req.body.account_holder_name,
+        account_number: req.body.account_number
     })
         .then(user => {
             res.status(200).send({ message: "Perumahan berhasil ditambah!." });
@@ -40,7 +43,10 @@ exports.updatePERUMAHAN = (req, res) => {
         saldo_perumahan: req.body.saldo_perumahan,
         link_cctv: req.body.link_cctv,
         link_img_qr: req.body.link_img_qr,
-        alamat_maps: req.body.alamat_maps
+        alamat_maps: req.body.alamat_maps,
+        bank_code: req.body.bank_code,
+        account_holder_name: req.body.account_holder_name,
+        account_number: req.body.account_number
     }, { where: { id_perumahan: req.body.id_perumahan } })
         .then(user => {
             res.status(200).send({ message: "Perumahan berhasil diperbaharui!." });
