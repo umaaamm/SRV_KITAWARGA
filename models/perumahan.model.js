@@ -22,6 +22,15 @@ module.exports = (sequelize, Sequelize) => {
       alamat_maps:{
         type: Sequelize.STRING
       },
+      bank_code:{
+        type: Sequelize.STRING
+      },
+      account_holder_name:{
+        type: Sequelize.STRING
+      },
+      account_number:{
+        type: Sequelize.STRING
+      },
     });
   
     return Role;

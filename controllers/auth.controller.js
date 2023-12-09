@@ -3,6 +3,8 @@ const config = require("../config/auth.config");
 const User = db.admin;
 const Pengurus = db.pengurus;
 const Warga = db.daftarWarga;
+const PerumahanData = db.perumahan;
+
 const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
@@ -48,7 +50,7 @@ exports.signin = async (req, res) => {
           req.body.password,
           warga.password_warga
         );
-  
+
         if (!passwordIsValid) {
           return res.status(401).send({
             accessToken: null,
@@ -89,12 +91,18 @@ exports.signin = async (req, res) => {
           id_pengurus: user.id_pengurus
         }
       })
-        .then(pengurus => {
+        .then(async (pengurus) =>  {
 
           var token = jwt.sign({ id: user.id, role: user.role, nama: user.nama_admin }, config.secret, {
             expiresIn: 3600 // 1 hours
           });
-          
+
+          const perumahanD = await PerumahanData.findOne({
+            where: {
+              id_perumahan: pengurus.id_perumahan
+            }
+          })
+
           res.status(200).send({
             id_pengurus: user.id_pengurus,
             id_perumahan: pengurus.id_perumahan,
@@ -103,6 +111,9 @@ exports.signin = async (req, res) => {
             email: user.email_admin,
             role: user.role,
             accessToken: token,
+            bank_code: perumahanD.bank_code,
+            account_holder_name: perumahanD.account_holder_name,
+            account_number: perumahanD.account_number
           });
         });
     })

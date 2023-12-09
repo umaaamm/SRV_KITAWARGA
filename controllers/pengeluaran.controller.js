@@ -297,7 +297,7 @@ exports.listPengeluaranGajiNew = async (req, res) => {
                     nama_karyawan: item.nama_karyawan,
                     posisi: item.posisi,
                     gaji_bulanan: item.gaji_bulanan,
-                    bulan: monthsArray[itemMonth - 1],
+                    bulan: monthsArray[itemMonth],
                     data: [item]
                 })
             }
@@ -361,7 +361,7 @@ exports.listPengeluaranKasbonNew = async (req, res) => {
                     id_kasbon: item.id_kasbon,
                     id_karyawan: item.id_karyawan,
                     nama_karyawan: item.nama_karyawan,
-                    bulan: monthsArray[itemMonth - 1],
+                    bulan: monthsArray[itemMonth],
                     data: [item]
                 })
             }
@@ -422,7 +422,7 @@ exports.listPengeluaranBulananNew = async (req, res) => {
                 dataTemp.push({
                     id_perumahan: item.id_perumahan,
                     nama_perumahan: item.nama_perumahan,
-                    bulan: monthsArray[itemMonth - 1],
+                    bulan: monthsArray[itemMonth],
                     data: [item]
                 })
             }
