@@ -47,10 +47,11 @@ exports.addPemasukanInv = async (req, res) => {
                     adjusted_received_amount: req.body.adjusted_received_amount,
                     fees_paid_amount: req.body.fees_paid_amount,
                     updated: req.body.updated,
-                    created: req.body.created,
-                    currency: req.body.currency,
-                    payment_channel: req.body.payment_channel,
+                    created: req.body.updated,
+                    currency: 'IDR',
+                    payment_channel: req.body.payment_method,
                     payment_destination: req.body.payment_destination,
+                    id:req.body.id
                 })
                     .then(async (user) => {
                         const PerumahanData = await Perumahan.findOne({
@@ -62,9 +63,6 @@ exports.addPemasukanInv = async (req, res) => {
                         await Perumahan.update({
                             saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) + (parseInt(req.body.amount)),
                         }, { where: { id_perumahan: dataFindInv.id_perumahan } });
-
-
-
                     })
                     .catch(err => {
                         res.status(500).send({ message: err.message });

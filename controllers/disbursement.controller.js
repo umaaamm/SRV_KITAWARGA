@@ -4,6 +4,7 @@ const axiosInstanceD = require("../services/axiosDisbursement");
 const APIURL = require("../services/endpoint");
 const Disbursement = db.disbursement;
 const { v1: uuidv1 } = require('uuid');
+const Perumahan = db.perumahan;
 
 exports.generateDisbursement = async (req, res) => {
     const uuid = uuidv1();
@@ -38,7 +39,17 @@ exports.generateDisbursement = async (req, res) => {
             id_warga: req.body.id_warga,
             amount: response.amount,
             id_perumahan: req.body.id_perumahan,
-        }).then((qr) => {
+        }).then(async (qr) => {
+            const PerumahanData = await Perumahan.findOne({
+                where: {
+                    id_perumahan: req.body.id_perumahan
+                }
+            });
+
+            await Perumahan.update({
+                saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) - (parseInt(response.amount)),
+            }, { where: { id_perumahan: req.body.id_perumahan } });
+
             res.status(200).send({ message: "Disbursement berhasil digenerate!.", data: response });
         })
     }).catch((error) => {
