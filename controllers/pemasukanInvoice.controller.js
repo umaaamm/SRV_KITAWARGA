@@ -92,11 +92,20 @@ exports.listPemasukanInv = (req, res) => {
 
 
 exports.listPemasukanLaporanInv = (req, res) => {
+
+    let query='';
+
+    if (req.body.id_warga == '') {
+        query ="select * from tb_pemasukan_invoices join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan "
+    }else{
+        query ="select * from tb_pemasukan_invoices join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan AND tb_daftar_wargas.id_warga = :id_warga "
+    }
+
     db.sequelize.query(
-        "select * from tb_pemasukan_invoices join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan ",
+        query,
         {
             type: db.sequelize.QueryTypes.SELECT,
-            replacements: { id_perumahan: req.body.id_perumahan},
+            replacements: { id_perumahan: req.body.id_perumahan, id_warga: req.body.id_warga},
         }
     ).then(result => {
         let dataTemp = []
