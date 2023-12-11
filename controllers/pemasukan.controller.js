@@ -115,11 +115,18 @@ exports.listPemasukan = (req, res) => {
 
 
 exports.listPemasukanLaporan = (req, res) => {
+    let query = '';
+    if (req.body.id_warga == '') {
+        query = "select tb_pemasukans.tanggal_transaksi,tb_pemasukans.id_transaksi,tb_pemasukans.id_warga, tb_pemasukans.nilai_transaksi ,tb_pemasukans.bulan , tb_pemasukans.nama_pembayar,tb_pemasukans.tanggal_transaksi from tb_pemasukans join tb_daftar_wargas on tb_pemasukans.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan "
+    }else{
+        query = "select tb_pemasukans.tanggal_transaksi,tb_pemasukans.id_transaksi,tb_pemasukans.id_warga, tb_pemasukans.nilai_transaksi ,tb_pemasukans.bulan , tb_pemasukans.nama_pembayar,tb_pemasukans.tanggal_transaksi from tb_pemasukans join tb_daftar_wargas on tb_pemasukans.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan AND tb_daftar_wargas.id_warga = :id_warga "
+    }
+
     db.sequelize.query(
-        "select tb_pemasukans.tanggal_transaksi,tb_pemasukans.id_transaksi,tb_pemasukans.id_warga, tb_pemasukans.nilai_transaksi ,tb_pemasukans.bulan , tb_pemasukans.nama_pembayar,tb_pemasukans.tanggal_transaksi from tb_pemasukans join tb_daftar_wargas on tb_pemasukans.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan ",
+        query,
         {
             type: db.sequelize.QueryTypes.SELECT,
-            replacements: { id_perumahan: req.body.id_perumahan},
+            replacements: { id_perumahan: req.body.id_perumahan, id_warga: req.body.id_warga},
         }
     ).then(result => {
         let dataTemp = []
