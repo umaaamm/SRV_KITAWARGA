@@ -7,10 +7,6 @@ const inv = db.Invoice;
 const PemasukanInv= db.pemasukanInvoice;
 
 exports.addPemasukanInv = async (req, res) => {
-
-
-    console.log('fddfdfsdfsdfsdf', req);
-
     const dataFindInv = await inv.findOne({
         where: {
             id: req.body.id
@@ -27,10 +23,6 @@ exports.addPemasukanInv = async (req, res) => {
             }).then((warga) => {
                 let dataSum = parseInt(req.body.amount) / parseInt(dataFindInv.list_bulan.length)
                 let totalDana = parseInt(dataSum) - (parseInt(dataSum) * 0.007) - (parseInt(dataSum) * 0.015)
-
-
-                console.log('fddfdfsdfsdfsdfaaaaaaa', warga);
-
 
                 PemasukanInv.create({
                     id_transaksi: uuid,

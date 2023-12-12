@@ -103,6 +103,12 @@ exports.signin = async (req, res) => {
             }
           })
 
+          const warga = await Warga.findOne({
+            where: {
+              id_warga: pengurus.id_warga
+            }
+          });
+
           res.status(200).send({
             id_pengurus: user.id_pengurus,
             id_perumahan: pengurus.id_perumahan,
@@ -113,7 +119,8 @@ exports.signin = async (req, res) => {
             accessToken: token,
             bank_code: perumahanD.bank_code,
             account_holder_name: perumahanD.account_holder_name,
-            account_number: perumahanD.account_number
+            account_number: perumahanD.account_number,
+            biaya_ipl: warga.biaya_ipl,
           });
         });
     })
