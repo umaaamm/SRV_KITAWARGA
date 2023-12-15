@@ -16,6 +16,7 @@ const controllerQR = require("../controllers/generateQr.controller");
 const controllerInv = require("../controllers/generateInv.controller");
 const pemasukanInv = require("../controllers/pemasukanInvoice.controller");
 const disbursementC = require("../controllers/disbursement.controller");
+const disbursementWebhook = require("../controllers/disbursementWebhook.controller");
 
 const middleware = require("../middleware");
 const multer = require('multer')
@@ -440,6 +441,17 @@ module.exports = function (app) {
         "/api/admin/insert/disbursement",
         [authJwt.verifyToken],
         disbursementC.generateDisbursement
+    )
+
+    app.post(
+        "/api/admin/insert/disbursement_webhook",
+        disbursementWebhook.addWebhookDisbursement
+    )
+
+    app.post(
+        "/api/admin/list/disbursement_webhook",
+        [authJwt.verifyToken],
+        disbursementWebhook.listDisbursementWebHook
     )
 
     app.post(

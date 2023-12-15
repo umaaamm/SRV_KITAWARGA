@@ -50,5 +50,6 @@ db.generateQr = require("../models/generateQr.model.js")(sequelize, Sequelize);
 db.Invoice = require("../models/generateInvoice.model.js")(sequelize, Sequelize);
 db.pemasukanInvoice = require("../models/pemasukan_invoice.model.js")(sequelize, Sequelize);
 db.disbursement = require("../models/disbursement.model.js")(sequelize, Sequelize);
+db.disbursementWebhook = require("../models/disbursement_webhook.model.js")(sequelize, Sequelize);
 
 module.exports = db;
