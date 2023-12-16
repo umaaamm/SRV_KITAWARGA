@@ -1,5 +1,6 @@
 const db = require("../models");
 const Warga = db.daftarWarga;
+var bcrypt = require("bcryptjs");
 
 exports.addWarga = (req, res) => {
     Warga.create({
@@ -112,3 +113,16 @@ exports.getProfile = (req, res) => {
         });
 
 };
+
+
+exports.updatePasswordWarga = (req, res) => {
+    Warga.update({
+      password_warga: bcrypt.hashSync(req.body.new_password_warga, 8),
+    }, { where: { id_warga: req.body.id_warga } })
+      .then(user => {
+        res.status(200).send({ message: "Berhasil diperbaharui password!." });
+      })
+      .catch(err => {
+        res.status(500).send({ message: err.message });
+      });
+  };

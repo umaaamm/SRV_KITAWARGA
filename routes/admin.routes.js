@@ -53,6 +53,12 @@ module.exports = function (app) {
         controllerAdmin.updatePassword
     )
 
+    app.post(
+        "/api/warga/update/password",
+        [authJwt.verifyToken, middleware.verifyAdd.checkDataWargaPass],
+        controllerWarga.updatePasswordWarga
+    )
+
     app.get(
         "/api/admin/list/admin",
         [authJwt.verifyToken],

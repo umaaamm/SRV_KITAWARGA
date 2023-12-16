@@ -315,6 +315,37 @@ checkDataAdmin = (req, res, next) => {
     });
 };
 
+checkDataWargaPass = (req, res, next) => {
+    WARGA.findOne({
+        where: {
+            id_warga: req.body.id_warga
+        }
+    }).then(admin => {
+
+        if (!admin) {
+            res.status(400).send({
+                message: "Failed! Data tidak ada dalam database!"
+            });
+            return;
+        }
+
+        var passwordIsValid = bcrypt.compareSync(
+            req.body.password_warga,
+            admin.password_warga
+          );
+
+        if(!passwordIsValid){
+            res.status(400).send({
+                message: "Failed! Password lama tidak sesuai!"
+            });
+            return;
+        }
+
+        
+        next();
+    });
+};
+
 // tarik tunai
 
 checkDuplicateTarikTunai = (req, res, next) => {
@@ -367,6 +398,7 @@ const verifyAdd = {
     checkDataPengurus: checkDataPengurus,
     checkDataPerumahan: checkDataPerumahan,
     checkDataAdmin: checkDataAdmin,
+    checkDataWargaPass: checkDataWargaPass,
     checkDataTarikTunai: checkDataTarikTunai,
     verifyTarikTunai: checkDuplicateTarikTunai,
 };
