@@ -132,7 +132,7 @@ exports.signin = async (req, res) => {
 exports.updatePassword = (req, res) => {
   User.update({
     password_admin: bcrypt.hashSync(req.body.new_password, 8),
-  }, { where: { username_admin: req.body.username_admin } })
+  }, { where: { no_hp_admin: req.body.no_hp_admin } })
     .then(user => {
       res.status(200).send({ message: "Berhasil diperbaharui password!." });
     })

@@ -287,7 +287,7 @@ checkDataPerumahan = (req, res, next) => {
 checkDataAdmin = (req, res, next) => {
     ADMIN.findOne({
         where: {
-            username_admin: req.body.username_admin
+            no_hp_admin: req.body.no_hp_admin
         }
     }).then(admin => {
 
