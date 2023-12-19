@@ -60,7 +60,7 @@ exports.mockData = async (req, res) => {
     });
 
     const dataPemasukan  = await db.sequelize.query(
-        "select sum(nilai_transaksi) as nilai_transaksi from tb_pemasukans join tb_daftar_wargas on tb_pemasukans.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan",
+        "select sum(nilai_transaksi) as nilai_transaksi from tb_pemasukan_invoices join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan",
         {
             replacements: { id_perumahan: req.body.id_perumahan},
             type: db.sequelize.QueryTypes.SELECT
