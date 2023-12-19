@@ -78,8 +78,9 @@ exports.addPemasukanInv = async (req, res) => {
 
 exports.listPemasukanInv = (req, res) => {
     db.sequelize.query(
-        "SELECT * FROM tb_pemasukan_invoices ORDER BY tb_pemasukan_invoices.tanggal_transaksi DESC",
+        "select * from tb_pemasukan_invoices join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan ",
         {
+            replacements: { id_perumahan: req.body.id_perumahan},
             type: db.sequelize.QueryTypes.SELECT
         }
     ).then(result => {
