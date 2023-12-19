@@ -61,7 +61,7 @@ exports.addPemasukanInv = async (req, res) => {
                         });
 
                         await Perumahan.update({
-                            saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) + (parseInt(req.body.amount)),
+                            saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) + (parseInt(totalDana)),
                         }, { where: { id_perumahan: dataFindInv.id_perumahan } });
                     })
                     .catch(err => {
