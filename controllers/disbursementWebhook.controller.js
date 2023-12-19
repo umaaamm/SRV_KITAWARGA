@@ -43,8 +43,9 @@ exports.addWebhookDisbursement = async (req, res) => {
 
 exports.listDisbursementWebHook = (req, res) => {
     db.sequelize.query(
-        "SELECT * FROM tb_disbursement_webhooks ORDER BY tb_disbursement_webhooks.created DESC",
+        "SELECT * FROM tb_disbursement_webhooks WHERE tb_disbursement_webhooks.id_perumahan = :id_perumahan ORDER BY tb_disbursement_webhooks.created DESC",
         {
+            replacements: { id_perumahan: req.body.id_perumahan},
             type: db.sequelize.QueryTypes.SELECT
         }
     ).then(result => {
