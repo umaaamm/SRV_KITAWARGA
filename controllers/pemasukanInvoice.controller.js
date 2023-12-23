@@ -78,7 +78,7 @@ exports.addPemasukanInv = async (req, res) => {
 
 exports.listPemasukanInv = (req, res) => {
     db.sequelize.query(
-        "select * from tb_pemasukan_invoices join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan ",
+        "select * from tb_pemasukan_invoices join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan ORDER BY tb_pemasukan_invoices.tanggal_transaksi DESC",
         {
             replacements: { id_perumahan: req.body.id_perumahan},
             type: db.sequelize.QueryTypes.SELECT
@@ -97,9 +97,9 @@ exports.listPemasukanLaporanInv = (req, res) => {
     let query='';
 
     if (req.body.id_warga == '') {
-        query ="select * from tb_pemasukan_invoices join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan "
+        query ="select * from tb_pemasukan_invoices join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan ORDER BY tb_pemasukan_invoices.tanggal_transaksi DESC"
     }else{
-        query ="select * from tb_pemasukan_invoices join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan AND tb_daftar_wargas.id_warga = :id_warga "
+        query ="select * from tb_pemasukan_invoices join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan AND tb_daftar_wargas.id_warga = :id_warga ORDER BY tb_pemasukan_invoices.tanggal_transaksi DESC"
     }
 
     db.sequelize.query(
