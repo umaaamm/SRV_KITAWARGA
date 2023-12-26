@@ -25,14 +25,14 @@ exports.generateInv = async (req, res) => {
 
     const headers = {
         'for-user-id': req.body.id_perumahan,
-      };
+    };
 
     const axiosConfig = {
         headers: headers
-      };
+    };
 
-    axiosInstance.post(APIURL.InvoiceUrl, requestData, axiosConfig ).then((response) => {
-       console.log('fmkdfmkd', response);
+    axiosInstance.post(APIURL.InvoiceUrl, requestData, axiosConfig).then((response) => {
+        console.log('fmkdfmkd', response);
         Invoice.create({
             id_invoice: uuid,
             id: response.id,
@@ -50,6 +50,7 @@ exports.generateInv = async (req, res) => {
             id_perumahan: wargaData.id_perumahan,
             list_bulan: req.body.list_bulan,
             isMultiMonth: req.body.isMultiMonth,
+            tahun: req.body.tahun,
             amountList: Number(wargaData.biaya_ipl) * req.body.list_bulan.length,
         }).then((qr) => {
             res.status(200).send({ message: "Invoice berhasil digenerate!.", data: response });

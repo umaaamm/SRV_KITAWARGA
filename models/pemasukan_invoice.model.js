@@ -82,6 +82,9 @@ module.exports = (sequelize, Sequelize) => {
       payment_destination: {
         type: Sequelize.STRING
       },
+      tahun:{
+        type: Sequelize.STRING
+      }
     });
   
     return Pemasukan;

@@ -4,7 +4,7 @@ const Pemasukan = db.pemasukan;
 const Perumahan = db.perumahan;
 const Warga = db.daftarWarga;
 const inv = db.Invoice;
-const PemasukanInv= db.pemasukanInvoice;
+const PemasukanInv = db.pemasukanInvoice;
 
 exports.addPemasukanInv = async (req, res) => {
     const dataFindInv = await inv.findOne({
@@ -51,7 +51,8 @@ exports.addPemasukanInv = async (req, res) => {
                     currency: 'IDR',
                     payment_channel: req.body.payment_method,
                     payment_destination: req.body.payment_destination,
-                    id:req.body.id
+                    id: req.body.id,
+                    tahun: dataFindInv.tahun
                 })
                     .then(async (user) => {
                         const PerumahanData = await Perumahan.findOne({
@@ -80,7 +81,7 @@ exports.listPemasukanInv = (req, res) => {
     db.sequelize.query(
         "select * from tb_pemasukan_invoices join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan ORDER BY tb_pemasukan_invoices.tanggal_transaksi DESC",
         {
-            replacements: { id_perumahan: req.body.id_perumahan},
+            replacements: { id_perumahan: req.body.id_perumahan },
             type: db.sequelize.QueryTypes.SELECT
         }
     ).then(result => {
@@ -94,23 +95,23 @@ exports.listPemasukanInv = (req, res) => {
 
 exports.listPemasukanLaporanInv = (req, res) => {
 
-    let query='';
+    let query = '';
 
     if (req.body.id_warga == '') {
-        query ="select * from tb_pemasukan_invoices join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan ORDER BY tb_pemasukan_invoices.tanggal_transaksi DESC"
-    }else{
-        query ="select * from tb_pemasukan_invoices join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan AND tb_daftar_wargas.id_warga = :id_warga ORDER BY tb_pemasukan_invoices.tanggal_transaksi DESC"
+        query = "select * from tb_pemasukan_invoices join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan ORDER BY tb_pemasukan_invoices.tanggal_transaksi DESC"
+    } else {
+        query = "select * from tb_pemasukan_invoices join tb_daftar_wargas on tb_pemasukan_invoices.id_warga = tb_daftar_wargas.id_warga where tb_daftar_wargas.id_perumahan = :id_perumahan AND tb_daftar_wargas.id_warga = :id_warga ORDER BY tb_pemasukan_invoices.tanggal_transaksi DESC"
     }
 
     db.sequelize.query(
         query,
         {
             type: db.sequelize.QueryTypes.SELECT,
-            replacements: { id_perumahan: req.body.id_perumahan, id_warga: req.body.id_warga},
+            replacements: { id_perumahan: req.body.id_perumahan, id_warga: req.body.id_warga },
         }
     ).then(result => {
         let dataTemp = []
-        
+
         result.map((item) => {
             const datku = dataTemp.find((i) => i.id_warga == item.id_warga)
             const index = dataTemp.findIndex((i) => i.id_warga === item.id_warga);
@@ -130,7 +131,7 @@ exports.listPemasukanLaporanInv = (req, res) => {
                 })
             }
         })
-        
+
         res.status(200).json({ message: "Berhasil Get Data Pemasukan.", data: dataTemp });
     })
         .catch(err => {

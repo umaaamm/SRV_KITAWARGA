@@ -51,6 +51,9 @@ module.exports = (sequelize, Sequelize) => {
       },
       amountList: {
         type: Sequelize.DECIMAL
+      },
+      tahun:{
+        type: Sequelize.STRING
       }
     });
 
