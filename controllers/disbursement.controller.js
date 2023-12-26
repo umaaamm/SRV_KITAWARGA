@@ -46,7 +46,7 @@ exports.generateDisbursement = async (req, res) => {
             });
 
             await Perumahan.update({
-                saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) - (parseInt(response.amount)),
+                saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) - (parseInt(response.amount) - 2775),
             }, { where: { id_perumahan: req.body.id_perumahan } });
 
             res.status(200).send({ message: "Disbursement berhasil digenerate!.", data: response });

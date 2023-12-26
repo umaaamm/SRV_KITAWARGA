@@ -17,7 +17,8 @@ exports.addWarga = (req, res) => {
         id_perumahan: req.body.id_perumahan,
         status_pernikahan: req.body.status_pernikahan,
         jenis_kelamin: req.body.jenis_kelamin,
-        biaya_ipl: parseInt(req.body.biaya_ipl) + parseInt(req.body.nomor_hp.slice(-3))
+        biaya_ipl: parseInt(req.body.biaya_ipl) + parseInt(req.body.nomor_hp.slice(-3)),
+        password_warga: bcrypt.hashSync('perum123', 8),
     })
         .then(user => {
             res.status(200).send({ message: "Warga berhasil ditambah!." });
