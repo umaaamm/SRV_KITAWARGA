@@ -27,7 +27,6 @@ exports.generateDisbursement = async (req, res) => {
     };
 
     axiosInstanceD.post(APIURL.DisbursementUrl, requestData, axiosConfig).then((response) => {
-        console.log('fmkdfmkd', response);
         Disbursement.create({
             id_disbursement: uuid,
             external_id: response.external_id,

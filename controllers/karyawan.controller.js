@@ -1,6 +1,9 @@
 const db = require("../models");
+const axiosInstanceD = require("../services/axiosDisbursement");
 const Karyawan = db.manajemenKaryawan;
 const Perumahan = db.perumahan;
+const APIURL = require("../services/endpoint");
+
 
 exports.addKaryawan = (req, res) => {
     Karyawan.create({
@@ -100,14 +103,29 @@ exports.mockData = async (req, res) => {
     )
 
     let totalPengeluaran = parseInt(dataPengeluaran[0].nilai_transaksi || 0) + parseInt(dataPengeluaranGaji[0].jumlah_gaji || 0) + parseInt(dataPengeluaranBulanan[0].nilai_transaksi_pengeluaran_bulanan || 0) +  parseInt(dataPengeluaranKasbon[0].jumlah_kasbon || 0)
-    let data = {
-        "total_saldo": PerumahanData.saldo_perumahan || '0', 
-        "total_pemasukan_bulan_ini": dataPemasukan[0].nilai_transaksi || '0',
-        "total_pengeluaran_bulan_ini": totalPengeluaran.toString() || '0',
-        "selisih": `${dataPemasukan[0].nilai_transaksi - dataPengeluaran[0].nilai_transaksi}` || '0',
-    }
+    
 
-    res.status(200).json({ message: "Berhasil Get Data Summary.", data: data });
+    const headers = {
+        'for-user-id': req.body.id_perumahan,
+    };
+
+    const axiosConfig = {
+        headers: headers
+    };
+
+    axiosInstanceD.get(APIURL.balance, axiosConfig).then((response) => {
+        let data = {
+            "total_saldo": PerumahanData.saldo_perumahan || '0', 
+            "total_pemasukan_bulan_ini": dataPemasukan[0].nilai_transaksi || '0',
+            "total_pengeluaran_bulan_ini": totalPengeluaran.toString() || '0',
+            "selisih": `${dataPemasukan[0].nilai_transaksi - dataPengeluaran[0].nilai_transaksi}` || '0',
+            "saldo_pengurus": `${parseInt(PerumahanData.saldo_perumahan)-parseInt(response.balance)}` || '0'
+        }
+    
+        res.status(200).json({ message: "Berhasil Get Data Summary.", data: data });
+    }).catch((error) => {
+        res.status(500).send({ message: error });
+    });
 };
 
 exports.mockDataList = (req, res) => {
