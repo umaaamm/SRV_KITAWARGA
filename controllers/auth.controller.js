@@ -4,21 +4,63 @@ const User = db.admin;
 const Pengurus = db.pengurus;
 const Warga = db.daftarWarga;
 const PerumahanData = db.perumahan;
+const { v1: uuidv1 } = require('uuid');
 
 const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
-exports.signup = (req, res) => {
+exports.signup = async (req, res) => {
+  const uuidPerumahan  = uuidv1();
+  const uuidWarga  = uuidv1();
+  const uuidPengurus  = uuidv1();
+
+  await PerumahanData.create({
+    id_perumahan: uuidPerumahan,
+    nama_perumahan: req.body.nama_perumahan,
+    alamat_perumahan: req.body.alamat_perumahan,
+    saldo_perumahan: 0,
+    link_cctv: "",
+    link_img_qr: "",
+    alamat_maps: "",
+    bank_code: "",
+    account_holder_name: "",
+    account_number: ""
+  })
+
+  await Warga.create({
+    id_warga: uuidWarga,
+    nama_warga: req.body.nama,
+    blok_rumah: req.body.blok_rumah,
+    nomor_rumah: req.body.nomor_rumah,
+    email: req.body.email,
+    nomor_hp: req.body.nomor_hp,
+    is_rw: false,
+    is_rt: false,
+    id_rt: "0710e340-9e4f-11ee-8c90-0242ac120002",
+    id_rw: "e88288de-9e4e-11ee-8c90-0242ac120002",
+    id_perumahan: uuidPerumahan,
+    status_pernikahan: req.body.status_pernikahan,
+    jenis_kelamin: req.body.jenis_kelamin,
+    biaya_ipl: parseInt(req.body.biaya_ipl),
+    password_warga: bcrypt.hashSync('perum123', 8),
+  })
+
+  await Pengurus.create({
+    id_pengurus: uuidPengurus,
+    id_warga: uuidWarga,
+    id_perumahan: uuidPerumahan,
+  })
+
   User.create({
-    username_admin: req.body.username_admin,
-    email_admin: req.body.email_admin,
-    password_admin: bcrypt.hashSync(req.body.password_admin, 8),
-    no_hp_admin: req.body.no_hp_admin,
-    nama_admin: req.body.nama_admin,
-    role: req.body.role,
-    id_pengurus: req.body.id_pengurus
+    username_admin: req.body.nama.substring(0,3) + Math.floor(Math.random() * 101),
+    email_admin: req.body.email,
+    password_admin: bcrypt.hashSync('perum123', 8),
+    no_hp_admin: req.body.nomor_hp,
+    nama_admin: req.body.nama,
+    role: '2c452346-3429-11ee-be56-0242ac120002',
+    id_pengurus: uuidPengurus
   })
     .then(user => {
       res.status(200).send({ message: "User was registered successfully!" });
