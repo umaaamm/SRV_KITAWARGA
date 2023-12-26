@@ -80,7 +80,7 @@ exports.listWarga = (req, res) => {
         query = "SELECT * FROM tb_daftar_wargas JOIN tb_perumahans ON tb_daftar_wargas.id_perumahan = tb_perumahans.id_perumahan WHERE tb_daftar_wargas.id_perumahan = :id_perumahan ORDER BY tb_daftar_wargas.nama_warga DESC";
     }
     if (req.body.param == 3) {
-        query = "SELECT * FROM tb_daftar_wargas JOIN tb_perumahans ON tb_daftar_wargas.id_perumahan = tb_perumahans.id_perumahan WHERE tb_daftar_wargas.id_perumahan = :id_perumahan AND tb_daftar_wargas.nama_warga LIKE :nama  ORDER BY tb_daftar_wargas.nama_warga ASC";
+        query = "SELECT * FROM tb_daftar_wargas JOIN tb_perumahans ON tb_daftar_wargas.id_perumahan = tb_perumahans.id_perumahan WHERE tb_daftar_wargas.id_perumahan = :id_perumahan AND LOWER(tb_daftar_wargas.nama_warga) LIKE LOWER(:nama)  ORDER BY tb_daftar_wargas.nama_warga ASC";
     }
 
     db.sequelize.query(
