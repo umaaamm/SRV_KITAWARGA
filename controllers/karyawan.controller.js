@@ -119,7 +119,8 @@ exports.mockData = async (req, res) => {
             "total_pemasukan_bulan_ini": dataPemasukan[0].nilai_transaksi || '0',
             "total_pengeluaran_bulan_ini": totalPengeluaran.toString() || '0',
             "selisih": `${dataPemasukan[0].nilai_transaksi - dataPengeluaran[0].nilai_transaksi}` || '0',
-            "saldo_pengurus": `${parseInt(PerumahanData.saldo_perumahan)-parseInt(response.balance)}` || '0'
+            "saldo_pengurus": `${parseInt(PerumahanData.saldo_perumahan)-parseInt(response.balance)}` || '0',
+            "saldo_xendit": `${response.balance}` || '0'
         }
     
         res.status(200).json({ message: "Berhasil Get Data Summary.", data: data });
