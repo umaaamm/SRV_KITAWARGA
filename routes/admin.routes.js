@@ -528,4 +528,10 @@ module.exports = function (app) {
         controllerPemasukan.listPemasukanWarga
     )
 
+    app.post(
+        "/api/admin/list/bulan",
+        [authJwt.verifyToken],
+        controllerInv.getListBulan
+    )
+
 };

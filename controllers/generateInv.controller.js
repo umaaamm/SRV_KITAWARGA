@@ -6,6 +6,23 @@ const Invoice = db.Invoice;
 const Warga = db.daftarWarga;
 const { v1: uuidv1 } = require('uuid');
 
+exports.getListBulan = async (req, res) => {
+    db.sequelize.query(
+        "select * from tb_pemasukan_invoices where tb_pemasukan_invoices.id_warga = :id_warga and tb_pemasukan_invoices.tahun = :tahun ",
+        {
+            type: db.sequelize.QueryTypes.SELECT,
+            replacements: { id_warga: req.body.id_warga, tahun: req.body.tahun },
+
+        }
+    ).then(result => {
+        res.status(200).json({ message: "Berhasil Get Data Bulan.", data: result });
+    })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+}
+
+
 exports.generateInv = async (req, res) => {
     let expiryDate = new Date(new Date().setHours(new Date().getHours() + 1));
     const uuid = uuidv1();
