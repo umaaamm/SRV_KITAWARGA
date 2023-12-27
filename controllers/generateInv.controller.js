@@ -7,6 +7,22 @@ const Warga = db.daftarWarga;
 const { v1: uuidv1 } = require('uuid');
 
 exports.getListBulan = async (req, res) => {
+
+    const data = [
+        { nama: "Januari", value: false },
+        { nama: "Februari", value: false },
+        { nama: "Maret", value: false },
+        { nama: "April", value: false },
+        { nama: "Mei", value: false },
+        { nama: "Juni", value: false },
+        { nama: "Juli", value: false },
+        { nama: "Agustus", value: false },
+        { nama: "September", value: false },
+        { nama: "Oktober", value: false },
+        { nama: "November", value: false },
+        { nama: "December", value: false },
+      ];
+
     db.sequelize.query(
         "select * from tb_pemasukan_invoices where tb_pemasukan_invoices.id_warga = :id_warga and tb_pemasukan_invoices.tahun = :tahun ",
         {
@@ -15,7 +31,16 @@ exports.getListBulan = async (req, res) => {
 
         }
     ).then(result => {
-        res.status(200).json({ message: "Berhasil Get Data Bulan.", data: result });
+        let tempData = [];
+
+        data.map((item) => {
+            if (!result.some((testItem) => testItem.bulan === item.nama)) {
+                tempData.push(item);
+              }
+          });
+
+
+        res.status(200).json({ message: "Berhasil Get Data Bulan.", data: tempData });
     })
         .catch(err => {
             res.status(500).send({ message: err.message });
