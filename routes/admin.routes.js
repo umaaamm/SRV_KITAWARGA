@@ -210,7 +210,7 @@ module.exports = function (app) {
         controllerKaryawan.updateKaryawan
     )
 
-    app.get(
+    app.post(
         "/api/admin/list/karyawan",
         [authJwt.verifyToken],
         controllerKaryawan.listKaryawan

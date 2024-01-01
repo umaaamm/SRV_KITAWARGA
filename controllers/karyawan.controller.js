@@ -161,9 +161,10 @@ exports.mockDataList = (req, res) => {
 
 exports.listKaryawan = (req, res) => {
     db.sequelize.query(
-        "SELECT * FROM tb_manajemen_karyawans",
+        "SELECT * FROM tb_manajemen_karyawans where id_perumahan = :id_perumahan",
         {
-            type: db.sequelize.QueryTypes.SELECT
+            type: db.sequelize.QueryTypes.SELECT,
+            replacements: { id_perumahan: req.body.id_perumahan },
         }
     ).then(result => {
         res.status(200).json({ message: "Berhasil Get Data Karyawan.", data: result });
