@@ -115,7 +115,9 @@ exports.listPemasukanLaporanInv = (req, res) => {
         result.map((item) => {
             const datku = dataTemp.find((i) => i.id_warga == item.id_warga)
             const index = dataTemp.findIndex((i) => i.id_warga === item.id_warga);
-            const itemYear = new Date(item.tanggal_transaksi * 1000).getFullYear();
+            // const itemYear = new Date(item.tanggal_transaksi * 1000).getFullYear();
+            const itemYear = item.tahun
+
             if (itemYear != req.body.tahun) {
                 return
             }
