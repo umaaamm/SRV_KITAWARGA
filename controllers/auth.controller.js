@@ -6,6 +6,7 @@ const Warga = db.daftarWarga;
 const PerumahanData = db.perumahan;
 const { v1: uuidv1 } = require('uuid');
 
+const transporter = require("../services/emailSent");
 const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
@@ -63,7 +64,33 @@ exports.signup = async (req, res) => {
     id_pengurus: uuidPengurus
   })
     .then(user => {
-      res.status(200).send({ message: "User was registered successfully!" });
+
+      var mailOptions = {
+        from: 'reza@kitawarga.com',
+        to: req.body.email,
+        subject: 'Registrasi berhasil',
+        html: '<p>Hallo,'+ req.body.nama+' Selamat Registrasi anda telah berhasil.</p><p><strong>Tim KitaWarga akan menghubungi anda segera.</strong></p><p>Terimakasih.</p>'
+      };
+    
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          res.status(500).send({ message: error });
+        } else {
+
+          var mailOptionsKita = {
+            from: 'reza@kitawarga.com',
+            to: 'reza@kitawarga.com',
+            subject: 'Registrasi berhasil',
+            html: '<p>Hallo, Terdapat registrasi baru di KitaWarga,</p><p>Nama : '+req.body.nama+' </p><p>Nama Perumahan : '+req.body.nama_perumahan+' </p><p>No Hp : '+req.body.nomor_hp+' </p><p>Email : '+req.body.email+'</p><p>Silahkan di Follow up!</p>'
+          };
+
+          transporter.sendMail(mailOptionsKita, function(error, info){});
+
+          res.status(200).send({ message: "User was registered successfully!" });
+        }
+      });
+
+      
     })
     .catch(err => {
       res.status(500).send({ message: err.message });

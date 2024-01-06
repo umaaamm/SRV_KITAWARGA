@@ -7,6 +7,7 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
     "multer": "*",
+    "nodemailer": "^6.9.8",
     "pg": "^8.10.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.31.0",
