@@ -4,6 +4,8 @@ const cors = require("cors");
 const fs = require("fs");
 const app = express();
 const https = require("https");
+var admin = require("firebase-admin");
+const schedule = require('node-schedule');
 
 var corsOptions = {
   origin: ["http://web.kitawarga.com", "http://localhost:3000"]
@@ -241,11 +243,61 @@ require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
 require('./routes/admin.routes')(app);
 
+
+var serviceAccount = require("./kitawarga-dba5d-firebase-adminsdk-w5v1v-aa8983b858.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+
+
+const verifyfcmtoken = (fcmtoken) => {
+  return admin.messaging().send({
+      token: fcmtoken
+  }, true)
+}
+
+// '0 10 25 * *'
+const job = schedule.scheduleJob('0 10 25 * *', function () {
+  console.log('The answer to life, the universe, and everything!');
+
+  db.sequelize.query(
+    "select * from tb_daftar_wargas",
+    {
+      type: db.sequelize.QueryTypes.SELECT
+    }
+  ).then(result => {
+    result.map((item) => {
+      if (item.fcm_token) {
+        verifyfcmtoken(item.fcm_token)
+        .then(async (result) => {
+            const messaging = admin.messaging()
+            var payload = {
+                notification: {
+                    title: "Reminder",
+                    body: "Silahkan lakukan pembayaran iuaran anda."
+                },
+                token: item.fcm_token || "",
+            };
+
+            await messaging.send(payload)
+        })
+        .catch(err => {
+           console.log('log');
+        })
+      }
+    });
+  })
+    .catch(err => {
+      console.log('skejuler error', err);
+    });
+
+});
+
 const options = {
   key: fs.readFileSync("certs/kitawarga.com.key"),                  //Change Private Key Path here
   cert: fs.readFileSync("certs/sectigo_kitawarga.com_crt.crt"),            //Change Main Certificate Path here
   ca: fs.readFileSync('certs/sectigo_kitawarga.com_intermediate.crt.crt'),             //Change Intermediate Certificate Path here
-  };
+};
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;

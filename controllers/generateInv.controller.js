@@ -5,6 +5,7 @@ const APIURL = require("../services/endpoint");
 const Invoice = db.Invoice;
 const Warga = db.daftarWarga;
 const { v1: uuidv1 } = require('uuid');
+var admin = require("firebase-admin");
 
 exports.getListBulan = async (req, res) => {
 
@@ -21,7 +22,7 @@ exports.getListBulan = async (req, res) => {
         { nama: "Oktober", value: false },
         { nama: "November", value: false },
         { nama: "December", value: false },
-      ];
+    ];
 
     db.sequelize.query(
         "select * from tb_pemasukan_invoices where tb_pemasukan_invoices.id_warga = :id_warga and tb_pemasukan_invoices.tahun = :tahun ",
@@ -36,8 +37,8 @@ exports.getListBulan = async (req, res) => {
         data.map((item) => {
             if (!result.some((testItem) => testItem.bulan === item.nama)) {
                 tempData.push(item);
-              }
-          });
+            }
+        });
 
 
         res.status(200).json({ message: "Berhasil Get Data Bulan.", data: tempData });
@@ -73,6 +74,12 @@ exports.generateInv = async (req, res) => {
         headers: headers
     };
 
+    const verifyfcmtoken = (fcmtoken) => {
+        return admin.messaging().send({
+            token: fcmtoken
+        }, true)
+    }
+
     axiosInstance.post(APIURL.InvoiceUrl, requestData, axiosConfig).then((response) => {
         console.log('fmkdfmkd', response);
         Invoice.create({
@@ -95,7 +102,28 @@ exports.generateInv = async (req, res) => {
             tahun: req.body.tahun,
             amountList: Number(wargaData.biaya_ipl) * req.body.list_bulan.length,
         }).then((qr) => {
+
+            if (wargaData.fcm_token) {
+                verifyfcmtoken(wargaData.fcm_token)
+                    .then(async (result) => {
+                        const messaging = admin.messaging()
+                        var payload = {
+                            notification: {
+                                title: "Pembayaran",
+                                body: "Silahkan lakukan pembayaran iuaran anda."
+                            },
+                            token: wargaData.fcm_token || "",
+                        };
+
+                        await messaging.send(payload)
+                    })
+                    .catch(err => {
+                       console.log('log');
+                    })
+            }
+
             res.status(200).send({ message: "Invoice berhasil digenerate!.", data: response });
+
         })
     }).catch((error) => {
         console.log('fdfmdfmdmfm', error);

@@ -5,13 +5,21 @@ const Perumahan = db.perumahan;
 const Warga = db.daftarWarga;
 const inv = db.Invoice;
 const PemasukanInv = db.pemasukanInvoice;
+var admin = require("firebase-admin");
 
 exports.addPemasukanInv = async (req, res) => {
+
     const dataFindInv = await inv.findOne({
         where: {
             id: req.body.id
         }
     });
+
+    const verifyfcmtoken = (fcmtoken) => {
+        return admin.messaging().send({
+            token: fcmtoken
+        }, true)
+    }
 
     if (dataFindInv.list_bulan.length > 0) {
         dataFindInv.list_bulan.map((item, idx) => {
@@ -71,6 +79,31 @@ exports.addPemasukanInv = async (req, res) => {
             })
 
         })
+
+        const dataWarga = await Warga.findOne({
+            where: {
+                id_warga: dataFindInv.id_warga
+            }
+        });
+
+        if (dataWarga.fcm_token) {
+            verifyfcmtoken(dataWarga.fcm_token)
+                .then(async (result) => {
+                    const messaging = admin.messaging()
+                    var payload = {
+                        notification: {
+                            title: "Pembayaran",
+                            body: "Pembayaran Anda telah berhasil."
+                        },
+                        token: dataWarga.fcm_token || "",
+                    };
+
+                    await messaging.send(payload)
+                })
+                .catch(err => {
+                    console.log('log');
+                })
+        }
 
         res.status(200).send({ message: "Pemasukan berhasil ditambah!." });
     }

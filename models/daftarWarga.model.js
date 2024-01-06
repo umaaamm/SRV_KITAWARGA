@@ -46,6 +46,9 @@ module.exports = (sequelize, Sequelize) => {
       password_warga:{
         type: Sequelize.STRING
       },
+      fcm_token: {
+        type: Sequelize.STRING
+      }
     });
   
     return DaftarWarga;

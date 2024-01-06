@@ -5,6 +5,7 @@ const Pengurus = db.pengurus;
 const Warga = db.daftarWarga;
 const PerumahanData = db.perumahan;
 const { v1: uuidv1 } = require('uuid');
+var admin = require("firebase-admin");
 
 const transporter = require("../services/emailSent");
 const Op = db.Sequelize.Op;
@@ -131,6 +132,12 @@ exports.signin = async (req, res) => {
           expiresIn: 3600 // 1 hours
         });
 
+
+        Warga.update({
+          fcm_token: req.body.fcm_token,
+      }, { where: { id_warga: warga.id_warga } })
+        
+
         res.status(200).send({
           id_warga: warga.id_warga,
           id_perumahan: warga.id_perumahan,
@@ -177,6 +184,10 @@ exports.signin = async (req, res) => {
               id_warga: pengurus.id_warga
             }
           });
+
+          Warga.update({
+            fcm_token: req.body.fcm_token,
+        }, { where: { id_warga: warga.id_warga } })
 
           res.status(200).send({
             id_pengurus: user.id_pengurus,
