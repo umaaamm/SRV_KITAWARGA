@@ -4,6 +4,7 @@ const User = db.admin;
 const Pengurus = db.pengurus;
 const Warga = db.daftarWarga;
 const PerumahanData = db.perumahan;
+const Karyawan = db.manajemenKaryawan;
 const { v1: uuidv1 } = require('uuid');
 var admin = require("firebase-admin");
 
@@ -179,6 +180,18 @@ exports.signin = async (req, res) => {
             }
           })
 
+          const wargaCount = await Warga.count({
+            where: {
+              id_perumahan: pengurus.id_perumahan
+            }
+          });
+
+          const karyawanCount = await Karyawan.count({
+            where: {
+              id_perumahan: pengurus.id_perumahan
+            }
+          });
+
           const warga = await Warga.findOne({
             where: {
               id_warga: pengurus.id_warga
@@ -201,6 +214,8 @@ exports.signin = async (req, res) => {
             account_holder_name: perumahanD.account_holder_name,
             account_number: perumahanD.account_number,
             biaya_ipl: warga.biaya_ipl,
+            total_karyawan: karyawanCount,
+            total_warga: wargaCount
           });
         });
     })
