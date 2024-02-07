@@ -35,7 +35,7 @@ exports.updateRT = (req, res) => {
         nomor_rt: req.body.nomor_rt,
         id_perumahan: req.body.id_perumahan,
         id_rw: req.body.id_rw
-    }, { where: { id_warga: req.body.id_warga } })
+    }, { where: { id_rt: req.body.id_rt } })
         .then(user => {
             res.status(200).send({ message: "RT berhasil diperbaharui!." });
         })
