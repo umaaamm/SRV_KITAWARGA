@@ -46,6 +46,23 @@ exports.updateRT = (req, res) => {
 
 exports.listRT = (req, res) => {
     let query = '';
+    query = "SELECT * FROM tb_rts JOIN tb_rws ON tb_rts.id_rw = tb_rws.id_rw"
+
+    db.sequelize.query(
+        query,
+        {
+            type: db.sequelize.QueryTypes.SELECT,
+        }
+    ).then(result => {
+        res.status(200).json({ message: "Berhasil Get Data RT.", data: result });
+    })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+};
+
+exports.listRTNEW = (req, res) => {
+    let query = '';
 
     if (req.body.id_perumahan != '') {
         query = "SELECT * FROM tb_rts JOIN tb_rws ON tb_rts.id_rw = tb_rws.id_rw where tb_rts.id_perumahan = :id_perumahan"
@@ -57,7 +74,7 @@ exports.listRT = (req, res) => {
         query,
         {
             type: db.sequelize.QueryTypes.SELECT,
-            replacements: { id_perumahan: req.body.id_perumahan, id_warga: req.body.id_warga },
+            replacements: { id_perumahan: req.body.id_perumahan },
         }
     ).then(result => {
         res.status(200).json({ message: "Berhasil Get Data RT.", data: result });

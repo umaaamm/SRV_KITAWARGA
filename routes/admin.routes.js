@@ -317,6 +317,12 @@ module.exports = function (app) {
         controllerRT.listRT
     )
 
+    app.post(
+        "/api/admin/list/rt_new",
+        [authJwt.verifyToken],
+        controllerRT.listRTNEW
+    )
+
     // end rt
 
     // start rw
@@ -342,6 +348,12 @@ module.exports = function (app) {
         "/api/admin/list/rw",
         [authJwt.verifyToken],
         controllerRW.listRW
+    )
+
+    app.post(
+        "/api/admin/list/rw_new",
+        [authJwt.verifyToken],
+        controllerRW.listRWNEW
     )
 
     // end rw
