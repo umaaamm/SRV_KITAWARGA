@@ -43,10 +43,19 @@ exports.updateRW = (req, res) => {
 };
 
 exports.listRW = (req, res) => {
+    let query = '';
+
+    if (req.body.id_perumahan != '') {
+        query = "SELECT * FROM tb_rws where tb_rws.id_perumahan = :id_perumahan"
+    } else {
+        query = "SELECT * FROM tb_rws"
+    }
+
     db.sequelize.query(
-        "SELECT * FROM tb_rws",
+        query,
         {
-            type: db.sequelize.QueryTypes.SELECT
+            type: db.sequelize.QueryTypes.SELECT,
+            replacements: { id_perumahan: req.body.id_perumahan, id_warga: req.body.id_warga },
         }
     ).then(result => {
         res.status(200).json({ message: "Berhasil Get Data RW.", data: result });
