@@ -71,7 +71,21 @@ exports.signup = async (req, res) => {
         from: 'reza@kitawarga.com',
         to: req.body.email,
         subject: 'Registrasi berhasil',
-        html: '<p>Hallo,'+ req.body.nama+' Selamat Registrasi anda telah berhasil.</p><p><strong>Tim KitaWarga akan menghubungi anda segera.</strong></p><p>Terimakasih.</p>'
+        html: `<p>Hallo,'+ req.body.nama+' Selamat Registrasi anda telah berhasil.
+        <p>Terima kasih telah melakukan registrasi di KitaWarga. Silahkan install aplikasi KitaWarga di Google Play Store lalu login dengan:</p>
+        <p><br></p>
+        <p>Masukkan Nomor hp anda</p>
+        <p>Password: perum123</p>
+        <p><br></p>
+        <p>Tim KitaWarga akan menghubungi anda segera.</p>
+        <p><br></p>
+        <p>Terimakasih</p>
+        <p><br></p>
+        <p>Have a nice day!</p>
+        <p><br></p>
+        <p>Best regards,</p>
+        <p>Tim Support KitaWarga</p>
+        <p><br></p>`
       };
     
       transporter.sendMail(mailOptions, function(error, info){
