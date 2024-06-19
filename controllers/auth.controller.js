@@ -63,7 +63,8 @@ exports.signup = async (req, res) => {
     no_hp_admin: req.body.nomor_hp,
     nama_admin: req.body.nama,
     role: '2c452346-3429-11ee-be56-0242ac120002',
-    id_pengurus: uuidPengurus
+    id_pengurus: uuidPengurus,
+    is_verif: false
   })
     .then(user => {
 
@@ -160,6 +161,7 @@ exports.signin = async (req, res) => {
           biaya_ipl: warga.biaya_ipl,
           role: 'warga',
           accessToken: token,
+          is_verif: true
         });
 
         return;
@@ -229,7 +231,8 @@ exports.signin = async (req, res) => {
             account_number: perumahanD.account_number,
             biaya_ipl: warga.biaya_ipl,
             total_karyawan: karyawanCount,
-            total_warga: wargaCount
+            total_warga: wargaCount,
+            is_verif: user.is_verif
           });
         });
     })

@@ -21,6 +21,9 @@ module.exports = (sequelize, Sequelize) => {
     },
     id_pengurus:{
       type: Sequelize.STRING
+    },
+    is_verif: {
+      type: Sequelize.BOOLEAN
     }
   });
 
