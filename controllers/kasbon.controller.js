@@ -1,5 +1,6 @@
 const db = require("../models");
 const Kasbon = db.kasbon;
+const PERUMAHAN = db.perumahan;
 
 exports.addKasbon = (req, res) => {
     Kasbon.create({
@@ -28,16 +29,43 @@ exports.addKasbon = (req, res) => {
 };
 
 exports.deleteKasbon = (req, res) => {
-    Kasbon.destroy({
-        where: {
-            id_kasbon: req.body.id_kasbon
-        }
-    }).then(user => {
-        res.status(200).send({ message: "Kasbon berhasil dihapus!." });
-    })
-        .catch(err => {
+    db.sequelize.query(
+        "select * from tb_kasbons join tb_manajemen_karyawans on tb_kasbons.id_karyawan = tb_manajemen_karyawans.id_karyawan where tb_kasbons.id_kasbon = :id_kasbon ",
+        {
+            type: db.sequelize.QueryTypes.SELECT,
+            replacements: { id_kasbon: req.body.id_kasbon },
+        }).then(user => {
+            PERUMAHAN.findOne({
+                where: {
+                    id_perumahan: user[0].id_perumahan
+                }
+            }).then(perum => {
+                
+                PERUMAHAN.update({
+                    saldo_perumahan: Number(perum.saldo_perumahan) + Number(user[0].pinjaman),
+                }, { where: { id_perumahan: user[0].id_perumahan } }).then(user => {
+                    Kasbon.destroy({
+                        where: {
+                            id_kasbon: req.body.id_kasbon
+                        }
+                    }).then(user => {
+                        res.status(200).send({ message: "Kasbon berhasil dihapus!." });
+                    }).catch(err => {
+                        res.status(500).send({ message: err.message });
+                    });
+                }).catch(err => {
+                    res.status(500).send({ message: err.message });
+                });
+
+
+            }).catch(err => {
+                res.status(500).send({ message: err.message });
+            });
+
+        }).catch(err => {
             res.status(500).send({ message: err.message });
         });
+
 };
 
 exports.updateKasbon = (req, res) => {
