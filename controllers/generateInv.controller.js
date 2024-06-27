@@ -110,7 +110,7 @@ exports.generateInv = async (req, res) => {
                         var payload = {
                             notification: {
                                 title: "Pembayaran",
-                                body: "Silahkan lakukan pembayaran iuaran anda."
+                                body: "Silakan lanjutkan pembayaran iuran atau IPL Anda."
                             },
                             token: wargaData.fcm_token || "",
                         };

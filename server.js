@@ -274,7 +274,7 @@ const job = schedule.scheduleJob('0 10 25 * *', function () {
             var payload = {
                 notification: {
                     title: "Reminder",
-                    body: "Silahkan lakukan pembayaran iuaran anda."
+                    body: "Mohon untuk lakukan pembayaran tagihan iuran atau IPL Anda yang belum dibayarkan."
                 },
                 token: item.fcm_token || "",
             };

@@ -93,7 +93,7 @@ exports.addPemasukanInv = async (req, res) => {
                     var payload = {
                         notification: {
                             title: "Pembayaran",
-                            body: "Pembayaran Anda telah berhasil."
+                            body: "Pembayaran iuran atau IPL Anda berhasil."
                         },
                         token: dataWarga.fcm_token || "",
                     };
