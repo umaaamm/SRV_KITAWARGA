@@ -118,7 +118,7 @@ exports.generateInv = async (req, res) => {
                         await messaging.send(payload)
                     })
                     .catch(err => {
-                       console.log('log');
+                       console.log('log generate INV', err);
                     })
             }
 

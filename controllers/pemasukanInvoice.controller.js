@@ -101,7 +101,7 @@ exports.addPemasukanInv = async (req, res) => {
                     await messaging.send(payload)
                 })
                 .catch(err => {
-                    console.log('log');
+                    console.log('log Pemasukan INV', err);
                 })
         }
 

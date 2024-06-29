@@ -282,7 +282,7 @@ const job = schedule.scheduleJob('0 10 25 * *', function () {
             await messaging.send(payload)
         })
         .catch(err => {
-           console.log('log');
+          console.log('log server js', err);
         })
       }
     });
