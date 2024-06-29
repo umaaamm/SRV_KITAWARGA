@@ -21,23 +21,34 @@ exports.addKasbon = (req, res) => {
                     id_karyawan: req.body.id_karyawan
                 }
             }).then(kary => {
-                Karyawan.update({
-                    sisa_kasbon: Number(kary.sisa_kasbon) + Number(req.body.pinjaman),
-                }, {
-                    where: { id_karyawan: req.body.id_karyawan }
-                }).then(res => {
-                    PERUMAHAN.update({
-                        saldo_perumahan: Number(perum.saldo_perumahan) - (Number(req.body.pinjaman)),
-                    }, { where: { id_perumahan: kary.id_perumahan } }).then(user => {
-                        res.status(200).send({ message: "Kasbon berhasil ditambah!." });
-                    }).catch(err => {
+
+                PERUMAHAN.findOne({
+                    where: {
+                        id_perumahan: user[0].id_perumahan
+                    }
+                }).then(perum => {
+
+                    Karyawan.update({
+                        sisa_kasbon: Number(kary.sisa_kasbon) + Number(req.body.pinjaman),
+                    }, {
+                        where: { id_karyawan: req.body.id_karyawan }
+                    }).then(res => {
+                        PERUMAHAN.update({
+                            saldo_perumahan: Number(perum.saldo_perumahan) - (Number(req.body.pinjaman)),
+                        }, { where: { id_perumahan: kary.id_perumahan } }).then(user => {
+                            res.status(200).send({ message: "Kasbon berhasil ditambah!." });
+                        }).catch(err => {
+                            res.status(500).send({ message: err.message });
+                        });
+                    });
+                })
+                    .catch(err => {
                         res.status(500).send({ message: err.message });
                     });
-                });
-            })
-                .catch(err => {
-                    res.status(500).send({ message: err.message });
-                });
+
+            }).catch(err => {
+                res.status(500).send({ message: err.message });
+            });
         });
 };
 
@@ -78,7 +89,7 @@ exports.deleteKasbon = (req, res) => {
                     });
 
 
-                  
+
                 }).catch(err => {
                     res.status(500).send({ message: err.message });
                 });
