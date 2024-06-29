@@ -53,15 +53,14 @@ exports.deleteKasbon = (req, res) => {
                     id_perumahan: user[0].id_perumahan
                 }
             }).then(perum => {
-                
                 PERUMAHAN.update({
                     saldo_perumahan: Number(perum.saldo_perumahan) + (Number(user[0].angsuran_per_bulan) * Number(user[0].tenor)),
                 }, { where: { id_perumahan: user[0].id_perumahan } }).then(user => {
 
                     Karyawan.update({
-                        sisa_kasbon: Number(kary.sisa_kasbon) - (Number(user[0].angsuran_per_bulan) * Number(user[0].tenor)),
+                        sisa_kasbon: Number(user[0].sisa_kasbon) - (Number(user[0].angsuran_per_bulan) * Number(user[0].tenor)),
                     }, {
-                        where: { id_karyawan: req.body.id_karyawan }
+                        where: { id_karyawan: user[0].id_karyawan }
                     }).then(res => {
 
                         Kasbon.destroy({
