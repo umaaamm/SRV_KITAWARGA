@@ -1,6 +1,7 @@
 const db = require("../models");
 const Kasbon = db.kasbon;
 const PERUMAHAN = db.perumahan;
+const Karyawan = db.manajemenKaryawan;
 
 exports.addKasbon = (req, res) => {
     Kasbon.create({
@@ -15,16 +16,28 @@ exports.addKasbon = (req, res) => {
         keterangan: req.body.keterangan,
     })
         .then(user => {
-            Karyawan.update({
-                sisa_kasbon: req.body.pinjaman,
-            }, {
-                where: { id_karyawan: req.body.id_karyawan }
-            }).then(res => {
-                res.status(200).send({ message: "Kasbon berhasil ditambah!." });
-            });
-        })
-        .catch(err => {
-            res.status(500).send({ message: err.message });
+            Karyawan.findOne({
+                where: {
+                    id_karyawan: req.body.id_karyawan
+                }
+            }).then(kary => {
+                Karyawan.update({
+                    sisa_kasbon: Number(kary.sisa_kasbon) + Number(req.body.pinjaman),
+                }, {
+                    where: { id_karyawan: req.body.id_karyawan }
+                }).then(res => {
+                    PERUMAHAN.update({
+                        saldo_perumahan: Number(perum.saldo_perumahan) - (Number(req.body.pinjaman)),
+                    }, { where: { id_perumahan: kary.id_perumahan } }).then(user => {
+                        res.status(200).send({ message: "Kasbon berhasil ditambah!." });
+                    }).catch(err => {
+                        res.status(500).send({ message: err.message });
+                    });
+                });
+            })
+                .catch(err => {
+                    res.status(500).send({ message: err.message });
+                });
         });
 };
 
@@ -40,19 +53,33 @@ exports.deleteKasbon = (req, res) => {
                     id_perumahan: user[0].id_perumahan
                 }
             }).then(perum => {
-
+                
                 PERUMAHAN.update({
                     saldo_perumahan: Number(perum.saldo_perumahan) + (Number(user[0].angsuran_per_bulan) * Number(user[0].tenor)),
                 }, { where: { id_perumahan: user[0].id_perumahan } }).then(user => {
-                    Kasbon.destroy({
-                        where: {
-                            id_kasbon: req.body.id_kasbon
-                        }
-                    }).then(user => {
-                        res.status(200).send({ message: "Kasbon berhasil dihapus!." });
+
+                    Karyawan.update({
+                        sisa_kasbon: Number(kary.sisa_kasbon) - (Number(user[0].angsuran_per_bulan) * Number(user[0].tenor)),
+                    }, {
+                        where: { id_karyawan: req.body.id_karyawan }
+                    }).then(res => {
+
+                        Kasbon.destroy({
+                            where: {
+                                id_kasbon: req.body.id_kasbon
+                            }
+                        }).then(user => {
+                            res.status(200).send({ message: "Kasbon berhasil dihapus!." });
+                        }).catch(err => {
+                            res.status(500).send({ message: err.message });
+                        });
+
                     }).catch(err => {
                         res.status(500).send({ message: err.message });
                     });
+
+
+                  
                 }).catch(err => {
                     res.status(500).send({ message: err.message });
                 });
