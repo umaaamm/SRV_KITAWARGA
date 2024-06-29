@@ -24,7 +24,7 @@ exports.addKasbon = (req, res) => {
 
                 PERUMAHAN.findOne({
                     where: {
-                        id_perumahan: user[0].id_perumahan
+                        id_perumahan: kary.id_perumahan
                     }
                 }).then(perum => {
 
