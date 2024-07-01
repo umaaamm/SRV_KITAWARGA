@@ -32,7 +32,7 @@ exports.addKasbon = (req, res) => {
                         sisa_kasbon: Number(kary.sisa_kasbon) + Number(req.body.pinjaman),
                     }, {
                         where: { id_karyawan: req.body.id_karyawan }
-                    }).then(res => {
+                    }).then(resH => {
                         PERUMAHAN.update({
                             saldo_perumahan: Number(perum.saldo_perumahan) - (Number(req.body.pinjaman)),
                         }, { where: { id_perumahan: kary.id_perumahan } }).then(user => {
