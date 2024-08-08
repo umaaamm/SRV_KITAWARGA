@@ -546,4 +546,13 @@ module.exports = function (app) {
         controllerInv.getListBulan
     )
 
+    app.post("/api/update/sub",
+        [authJwt.verifyToken],
+        controllerPerumahan.updateSub
+    )
+
+    app.post("/api/expired/check",
+        [authJwt.verifyToken],
+        controllerPerumahan.validateExpiredSub
+    )
 };

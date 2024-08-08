@@ -31,6 +31,12 @@ module.exports = (sequelize, Sequelize) => {
       account_number:{
         type: Sequelize.STRING
       },
+      status_account:{
+        type: Sequelize.STRING
+      },
+      expired_sub:{
+        type: Sequelize.DATE
+      },
     });
   
     return Role;
