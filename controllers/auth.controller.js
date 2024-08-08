@@ -232,7 +232,8 @@ exports.signin = async (req, res) => {
             biaya_ipl: warga.biaya_ipl,
             total_karyawan: karyawanCount,
             total_warga: wargaCount,
-            is_verif: user.is_verif
+            is_verif: user.is_verif,
+            status_account: perumahanD.status_account
           });
         });
     })
