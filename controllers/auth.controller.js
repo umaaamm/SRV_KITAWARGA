@@ -161,7 +161,8 @@ exports.signin = async (req, res) => {
           biaya_ipl: warga.biaya_ipl,
           role: 'warga',
           accessToken: token,
-          is_verif: true
+          is_verif: true,
+          status_account: "0"
         });
 
         return;
