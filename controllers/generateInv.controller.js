@@ -7,6 +7,10 @@ const Warga = db.daftarWarga;
 const { v1: uuidv1 } = require('uuid');
 var admin = require("firebase-admin");
 
+const inv = db.Invoice;
+const PemasukanInv = db.pemasukanInvoice;
+const Perumahan = db.perumahan;
+
 exports.getListBulan = async (req, res) => {
 
     const data = [
@@ -81,7 +85,6 @@ exports.generateInv = async (req, res) => {
     }
 
     axiosInstance.post(APIURL.InvoiceUrl, requestData, axiosConfig).then((response) => {
-        console.log('fmkdfmkd', response);
         Invoice.create({
             id_invoice: uuid,
             id: response.id,
@@ -101,9 +104,107 @@ exports.generateInv = async (req, res) => {
             isMultiMonth: req.body.isMultiMonth,
             tahun: req.body.tahun,
             amountList: Number(wargaData.biaya_ipl) * req.body.list_bulan.length,
-        }).then((qr) => {
+            type_payment: req.body.type_payment
+        }).then(async (qr) => {
 
-            if (wargaData.fcm_token) {
+            if (req.body.type_payment == "2") {
+                const dataFindInv = await inv.findOne({
+                    where: {
+                        id: response.id
+                    }
+                });
+                const verifyfcmtoken = (fcmtoken) => {
+                    return admin.messaging().send({
+                        token: fcmtoken
+                    }, true)
+                }
+
+                if (dataFindInv.list_bulan.length > 0) {
+                    dataFindInv.list_bulan.map((item, idx) => {
+                        const uuidTrx = uuidv1();
+                        Warga.findOne({
+                            where: {
+                                id_warga: dataFindInv.id_warga
+                            }
+                        }).then(async (warga) => {
+                            let dataSum = parseInt(response.amount) / parseInt(dataFindInv.list_bulan.length)
+                            let totalDana = parseInt(dataSum) - (parseInt(dataSum) * 0.007) - (parseInt(dataSum) * 0.015)
+
+                            await PemasukanInv.create({
+                                id_transaksi: uuidTrx,
+                                id_warga: warga.id_warga,
+                                nama_pembayar: warga.nama_warga,
+                                nomor_rumah: warga.nomor_rumah,
+                                tanggal_transaksi: Math.floor(new Date().getTime() / 1000),
+                                nilai_transaksi: totalDana,
+                                bulan: item.nama,
+                                external_id: response.external_id,
+                                user_id: response.user_id,
+                                is_high: 'false',
+                                payment_method: 'CASH',
+                                status: 'PAID',
+                                merchant_name: 'KitaWarga',
+                                amount: totalDana,
+                                paid_amount: totalDana,
+                                bank_code: 'CASH',
+                                paid_at: Math.floor(new Date().getTime() / 1000),
+                                payer_email: 'admin@kitawarga.com',
+                                description: 'Pembayaran CASH',
+                                adjusted_received_amount: 0,
+                                fees_paid_amount: 0,
+                                updated: Math.floor(new Date().getTime() / 1000),
+                                created: Math.floor(new Date().getTime() / 1000),
+                                currency: 'IDR',
+                                payment_channel: 'CASH',
+                                payment_destination: 'CASH',
+                                id: response.id,
+                                tahun: dataFindInv.tahun,
+                            });
+
+                            const PerumahanData = await Perumahan.findOne({
+                                where: {
+                                    id_perumahan: dataFindInv.id_perumahan
+                                }
+                            });
+
+                            await Perumahan.update({
+                                saldo_perumahan: parseInt(PerumahanData.saldo_perumahan) + (parseInt(totalDana)),
+                            }, { where: { id_perumahan: dataFindInv.id_perumahan } });
+                        })
+
+                    });
+
+                    const dataWarga = await Warga.findOne({
+                        where: {
+                            id_warga: dataFindInv.id_warga
+                        }
+                    });
+
+                    if (dataWarga.fcm_token) {
+                        verifyfcmtoken(dataWarga.fcm_token)
+                            .then(async (result) => {
+                                const messaging = admin.messaging()
+                                var payload = {
+                                    notification: {
+                                        title: "Pembayaran",
+                                        body: "Pembayaran iuran atau IPL Anda berhasil."
+                                    },
+                                    token: dataWarga.fcm_token || "",
+                                };
+
+                                await messaging.send(payload)
+                            })
+                            .catch(err => {
+                                console.log('log Pemasukan INV', err);
+                            })
+                    }
+
+                    // res.status(200).send({ message: "Pemasukan berhasil ditambah!." });
+                }
+
+            }
+
+            if (wargaData.fcm_token && req.body.type_payment != "2") {
                 verifyfcmtoken(wargaData.fcm_token)
                     .then(async (result) => {
                         const messaging = admin.messaging()
@@ -118,7 +219,7 @@ exports.generateInv = async (req, res) => {
                         await messaging.send(payload)
                     })
                     .catch(err => {
-                       console.log('log generate INV', err);
+                        console.log('log generate INV', err);
                     })
             }
 
