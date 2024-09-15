@@ -223,7 +223,12 @@ exports.generateInv = async (req, res) => {
                     })
             }
 
-            res.status(200).send({ message: "Invoice berhasil digenerate!.", data: response });
+            const newReponse = {
+            type_payment: req.body.type_payment,
+            ...response
+            }
+
+            res.status(200).send({ message: "Invoice berhasil digenerate!.", data: newReponse });
 
         })
     }).catch((error) => {
